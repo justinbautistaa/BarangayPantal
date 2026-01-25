@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/primary_blue"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Households"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <!-- Search and Add -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:background="@color/gray_light"
+        android:layout_margin="10dp">
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:hint="Search households..."
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="Add"
+            android:background="@color/primary_blue"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginStart="10dp" />
+    </LinearLayout>
+
+    <!-- Households Count -->
+    <TextView
+        android:id="@+id/textViewHouseholdsCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4 households"
+        android:textSize="14sp"
+        android:textColor="@color/gray_dark"
+        android:layout_margin="15dp" />
+
+    <!-- Households List -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp">
+
+        <LinearLayout
+            android:id="@+id/layoutHouseholdsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Households will be added here -->
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
