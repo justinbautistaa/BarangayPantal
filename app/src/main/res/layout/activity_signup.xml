@@ -1,154 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:padding="20dp">
+    android:padding="16dp"
+    tools:context=".ui.activities.SignupActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:orientation="vertical">
 
-        <!-- Back Button -->
-        <TextView
-            android:id="@+id/textViewBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="← Back"
-            android:textSize="16sp"
-            android:textColor="@color/primary_blue"
-            android:layout_marginBottom="30dp"
-            android:padding="10dp" />
-
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create Account"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_blue"
-            android:layout_marginBottom="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Barangay Staff Registration"
-            android:textSize="14sp"
-            android:textColor="@color/gray_dark"
-            android:layout_marginBottom="30dp" />
-
-        <!-- Full Name -->
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:boxCornerRadiusTopStart="8dp"
-            app:boxCornerRadiusTopEnd="8dp"
-            app:boxCornerRadiusBottomStart="8dp"
-            app:boxCornerRadiusBottomEnd="8dp">
+            android:hint="Full Name">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextFullName"
+                android:id="@+id/name_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Full Name"
-                android:inputType="text" />
+                android:layout_height="wrap_content" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Username -->
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:boxCornerRadiusTopStart="8dp"
-            app:boxCornerRadiusTopEnd="8dp"
-            app:boxCornerRadiusBottomStart="8dp"
-            app:boxCornerRadiusBottomEnd="8dp">
+            android:layout_marginTop="8dp"
+            android:hint="Email">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextUsername"
+                android:id="@+id/email_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Username"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Email -->
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:boxCornerRadiusTopStart="8dp"
-            app:boxCornerRadiusTopEnd="8dp"
-            app:boxCornerRadiusBottomStart="8dp"
-            app:boxCornerRadiusBottomEnd="8dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email Address"
                 android:inputType="textEmailAddress" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Password -->
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:boxCornerRadiusTopStart="8dp"
-            app:boxCornerRadiusTopEnd="8dp"
-            app:boxCornerRadiusBottomStart="8dp"
-            app:boxCornerRadiusBottomEnd="8dp"
-            app:endIconMode="password_toggle">
+            android:layout_marginTop="8dp"
+            android:hint="Password"
+            app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextPassword"
+                android:id="@+id/password_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
                 android:inputType="textPassword" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Confirm Password -->
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            app:boxCornerRadiusTopStart="8dp"
-            app:boxCornerRadiusTopEnd="8dp"
-            app:boxCornerRadiusBottomStart="8dp"
-            app:boxCornerRadiusBottomEnd="8dp"
-            app:endIconMode="password_toggle">
+            android:layout_marginTop="8dp"
+            android:hint="Confirm Password"
+            app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextConfirmPassword"
+                android:id="@+id/confirm_password_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Confirm Password"
                 android:inputType="textPassword" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Create Account Button -->
-        <Button
-            android:id="@+id/buttonCreateAccount"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signup_button"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="CREATE ACCOUNT"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:backgroundTint="@color/primary_blue"
-            android:textColor="@color/white"
-            app:cornerRadius="8dp"
-            android:layout_marginBottom="40dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Sign Up" />
+
+        <TextView
+            android:id="@+id/login_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="Already have an account? Login" />
 
     </LinearLayout>
-</ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>

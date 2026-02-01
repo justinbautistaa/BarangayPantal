@@ -3,4 +3,8 @@
     <string-array name="request_types">
         <item>Default Request Type</item>
     </string-array>
+    <string name="arrow_forward_description">Arrow forward</string>
+    <string name="view">View</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "961952650917",
+    "firebase_url": "https://barangay-pantal-default-rtdb.firebaseio.com",
+    "project_id": "barangay-pantal",
+    "storage_bucket": "barangay-pantal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961952650917:android:1ea63121461927aa8cdf4c",
+        "android_client_info": {
+          "package_name": "com.barangay.pantal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAg2CcQUs769g5njpRgiJKeZwcqF-WRY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

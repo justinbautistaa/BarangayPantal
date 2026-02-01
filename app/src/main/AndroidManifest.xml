@@ -8,7 +8,7 @@
         android:theme="@style/Theme.BarangayPantal">
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,13 +16,25 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DashboardActivity" />
-        <activity android:name=".ResidentsActivity" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".HouseholdsActivity" />
-        <activity android:name=".AnnouncementsActivity" />
-        <activity android:name=".ServicesActivity" />
-        <activity android:name=".RequestsActivity" />
+        <activity android:name=".ui.activities.AdminDashboardActivity" />
+        <activity android:name=".ui.activities.UserDashboardActivity" />
+        <activity android:name=".ui.activities.ResidentsActivity" />
+        <activity android:name=".ui.activities.AddResidentActivity" />
+        <activity android:name=".ui.activities.ViewResidentActivity" />
+        <activity android:name=".ui.activities.SignupActivity" />
+        <activity android:name=".ui.activities.HouseholdsActivity" />
+        <activity android:name=".ui.activities.AddHouseholdActivity" />
+        <activity android:name=".ui.activities.AnnouncementsActivity" />
+        <activity android:name=".ui.activities.ServicesActivity" />
+        <activity android:name=".ui.activities.RequestServiceActivity" />
+        <activity android:name=".ui.activities.RequestsActivity" />
+        <activity android:name=".ui.activities.ReportsActivity" />
+        <activity android:name=".ui.activities.MoreActivity" />
+        <activity android:name=".ui.activities.PhoneAuthActivity" />
+        <activity android:name=".ui.activities.ManageAnnouncementsActivity" />
+        <activity android:name=".ui.activities.ManageServicesActivity" />
+        <activity android:name=".ui.activities.ManageRequestsActivity" />
+        <activity android:name=".ui.activities.ManageReportsActivity" />
 
     </application>
 

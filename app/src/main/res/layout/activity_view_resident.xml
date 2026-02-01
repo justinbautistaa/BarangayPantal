@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ui.activities.ViewResidentActivity">
+
+    <TextView
+        android:id="@+id/name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:text="Justin Bautista" />
+
+    <TextView
+        android:id="@+id/details_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        tools:text="45 years • Male" />
+
+    <TextView
+        android:id="@+id/address_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        tools:text="Block 1, Lot 5, Pantal, Dagupan City" />
+
+    <TextView
+        android:id="@+id/occupation_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        tools:text="Fisherman" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/tags_chip_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

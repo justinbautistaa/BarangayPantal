@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -40,19 +40,17 @@ android {
 }
 
 dependencies {
-    val room_version = "2.8.4"
-
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
+    implementation("com.firebaseui:firebase-ui-database:8.0.2")
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

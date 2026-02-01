@@ -1,91 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    tools:context=".ui.activities.HouseholdsActivity">
 
-    <!-- Header -->
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/primary_blue"
-        android:orientation="horizontal"
-        android:padding="15dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Households"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_menu"
+            app:title="Brgy. Pantal"
+            app:subtitle="Dagupan City" />
 
-        <TextView
-            android:id="@+id/textViewBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Back"
-            android:textColor="@color/white" />
-    </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Search and Add -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="15dp"
-        android:background="@color/gray_light"
-        android:layout_margin="10dp">
-
-        <EditText
-            android:id="@+id/editTextSearch"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:padding="10dp"
-            android:hint="Search households..."
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/buttonAdd"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:text="Add"
-            android:background="@color/primary_blue"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginStart="10dp" />
-    </LinearLayout>
-
-    <!-- Households Count -->
-    <TextView
-        android:id="@+id/textViewHouseholdsCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="4 households"
-        android:textSize="14sp"
-        android:textColor="@color/gray_dark"
-        android:layout_margin="15dp" />
-
-    <!-- Households List -->
-    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="15dp">
+        android:layout_below="@id/appbar"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/layoutHouseholdsList"
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_margin="16dp"
+            app:queryHint="Search households..." />
 
-            <!-- Households will be added here -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_household_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Add Household"
+            app:icon="@drawable/ic_add" />
 
-        </LinearLayout>
-    </ScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/households_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_household" />
 
-</LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation_menu_admin" />
+
+</RelativeLayout>

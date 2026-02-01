@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ui.activities.AddResidentActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Age">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/age_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Gender">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/gender_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Address">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/address_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Occupation">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/occupation_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/voter_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Voter" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/senior_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Senior" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/pwd_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PWD" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="Save" />
+
+</LinearLayout>
