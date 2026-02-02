@@ -35,11 +35,7 @@ class ResidentsActivity : BaseActivity() {
             startActivity(Intent(this, AddResidentActivity::class.java))
         }
 
-        val dashboardClass = when (getUserRole()) {
-            "admin" -> AdminDashboardActivity::class.java
-            else -> UserDashboardActivity::class.java
-        }
-        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_residents, dashboardClass)
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_residents)
     }
 
     private fun setupRecyclerView() {
@@ -104,6 +100,8 @@ class ResidentsActivity : BaseActivity() {
                 filterResidents(binding.searchView.query.toString())
                 binding.progressBar.visibility = View.GONE
             }
+
+
 
             override fun onCancelled(error: DatabaseError) {
                 binding.progressBar.visibility = View.GONE

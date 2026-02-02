@@ -28,10 +28,13 @@
         <activity android:name=".ui.activities.ServicesActivity" />
         <activity android:name=".ui.activities.RequestServiceActivity" />
         <activity android:name=".ui.activities.RequestsActivity" />
+        <activity android:name=".ui.activities.AdminRequestsActivity" />
         <activity android:name=".ui.activities.ReportsActivity" />
         <activity android:name=".ui.activities.MoreActivity" />
         <activity android:name=".ui.activities.PhoneAuthActivity" />
         <activity android:name=".ui.activities.ManageAnnouncementsActivity" />
+        <activity android:name=".ui.activities.AddAnnouncementActivity" />
+        <activity android:name=".ui.activities.MakeAnnouncementActivity" />
         <activity android:name=".ui.activities.ManageServicesActivity" />
         <activity android:name=".ui.activities.ManageRequestsActivity" />
         <activity android:name=".ui.activities.ManageReportsActivity" />

@@ -4,12 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityAdminDashboardBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class AdminDashboardActivity : AppCompatActivity() {
+class AdminDashboardActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAdminDashboardBinding
     private lateinit var auth: FirebaseAuth
@@ -32,35 +31,19 @@ class AdminDashboardActivity : AppCompatActivity() {
             startActivity(Intent(this, AdminRequestsActivity::class.java))
         }
 
+        binding.btnRequests.setOnClickListener {
+            startActivity(Intent(this, AdminRequestsActivity::class.java))
+        }
+
         binding.cardHouseholds.setOnClickListener {
             startActivity(Intent(this, HouseholdsActivity::class.java))
         }
 
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_dashboard -> {
-                    // Already in Dashboard
-                    true
-                }
-                R.id.navigation_announcements -> {
-                    startActivity(Intent(this, AnnouncementsActivity::class.java))
-                    true
-                }
-                R.id.navigation_requests -> {
-                    startActivity(Intent(this, AdminRequestsActivity::class.java))
-                    true
-                }
-                R.id.navigation_households -> {
-                    startActivity(Intent(this, HouseholdsActivity::class.java))
-                    true
-                }
-                R.id.navigation_residents -> {
-                    startActivity(Intent(this, ResidentsActivity::class.java))
-                    true
-                }
-                else -> false
-            }
+        binding.btnManageAnnouncements.setOnClickListener {
+            startActivity(Intent(this, ManageAnnouncementsActivity::class.java))
         }
+
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_dashboard)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -72,6 +55,10 @@ class AdminDashboardActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_logout -> {
                 logout()
+                true
+            }
+            R.id.action_reports -> {
+                startActivity(Intent(this, ReportsActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)

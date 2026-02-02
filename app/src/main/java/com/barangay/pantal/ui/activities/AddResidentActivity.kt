@@ -1,6 +1,7 @@
 package com.barangay.pantal.ui.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.barangay.pantal.databinding.ActivityAddResidentBinding
 import com.barangay.pantal.model.Resident
@@ -69,20 +70,16 @@ class AddResidentActivity : BaseActivity() {
         }
 
         val database = FirebaseDatabase.getInstance().reference.child("residents")
-        val currentResidentId = residentId ?: database.push().key
+        val currentResidentId = residentId ?: database.push().key!!
 
-        if (currentResidentId != null) {
-            val resident = Resident(currentResidentId, name, age, gender, address, occupation, isVoter, isSenior, isPwd)
-            database.child(currentResidentId).setValue(resident).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Toast.makeText(this, "Resident saved successfully", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    Toast.makeText(this, "Failed to save resident", Toast.LENGTH_SHORT).show()
-                }
+        val resident = Resident(currentResidentId, name, age, gender, address, occupation, isVoter, isSenior, isPwd)
+        database.child(currentResidentId).setValue(resident).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Toast.makeText(this, "Resident saved successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this, "Failed to save resident", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            Toast.makeText(this, "Failed to generate a unique ID for the resident", Toast.LENGTH_SHORT).show()
         }
     }
 }

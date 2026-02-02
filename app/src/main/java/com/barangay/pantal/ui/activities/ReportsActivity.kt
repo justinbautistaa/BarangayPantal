@@ -1,16 +1,21 @@
 package com.barangay.pantal.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityReportsBinding
 import com.barangay.pantal.model.Report
 import com.barangay.pantal.ui.adapters.ReportAdapter
+import com.google.firebase.auth.FirebaseAuth
 
 class ReportsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityReportsBinding
     private lateinit var reportAdapter: ReportAdapter
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,11 +23,7 @@ class ReportsActivity : BaseActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        val dashboardClass = when (getUserRole()) {
-            "admin" -> AdminDashboardActivity::class.java
-            else -> UserDashboardActivity::class.java
-        }
-        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_reports, dashboardClass)
+        auth = FirebaseAuth.getInstance()
 
         // Load reports
         loadReports()
@@ -42,5 +43,32 @@ class ReportsActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@ReportsActivity)
             adapter = reportAdapter
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                logout()
+                true
+            }
+            R.id.action_reports -> {
+                // We are already in reports, do nothing.
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun logout() {
+        auth.signOut()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 }

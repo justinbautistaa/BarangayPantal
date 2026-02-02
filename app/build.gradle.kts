@@ -48,7 +48,9 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
-    implementation("com.firebaseui:firebase-ui-database:8.0.2")
+    implementation("com.firebaseui:firebase-ui-database:8.0.2") {
+        exclude(group = "com.facebook.android")
+    }
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

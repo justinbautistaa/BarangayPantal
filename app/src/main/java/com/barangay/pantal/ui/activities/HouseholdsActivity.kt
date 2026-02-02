@@ -26,11 +26,7 @@ class HouseholdsActivity : BaseActivity() {
             startActivity(Intent(this, AddHouseholdActivity::class.java))
         }
 
-        val dashboardClass = when (getUserRole()) {
-            "admin" -> AdminDashboardActivity::class.java
-            else -> UserDashboardActivity::class.java
-        }
-        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_households, dashboardClass)
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_households)
     }
 
     private fun setupRecyclerView() {

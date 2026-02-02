@@ -2,7 +2,6 @@ package com.barangay.pantal.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityAnnouncementsBinding
@@ -26,22 +25,15 @@ class AnnouncementsActivity : BaseActivity() {
             .setQuery(query, Announcement::class.java)
             .build()
 
-        adapter = AnnouncementsAdapter(isAdmin = getUserRole() == "admin", options)
+        adapter = AnnouncementsAdapter(getUserRole() == "admin", options)
         binding.announcementsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.announcementsRecyclerView.adapter = adapter
 
-        if (getUserRole() == "admin") {
-            binding.newAnnouncementButton.visibility = View.VISIBLE
-            binding.newAnnouncementButton.setOnClickListener {
-                startActivity(Intent(this, ManageAnnouncementsActivity::class.java))
-            }
+        binding.newAnnouncementButton.setOnClickListener {
+            startActivity(Intent(this, MakeAnnouncementActivity::class.java))
         }
 
-        val dashboardClass = when (getUserRole()) {
-            "admin" -> AdminDashboardActivity::class.java
-            else -> UserDashboardActivity::class.java
-        }
-        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_announcements, dashboardClass)
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_announcements)
     }
 
     override fun onStart() {

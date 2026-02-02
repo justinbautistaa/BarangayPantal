@@ -26,6 +26,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation"
         android:layout_below="@id/appbar">
 
         <LinearLayout
@@ -233,13 +234,13 @@
                     app:icon="@drawable/ic_requests" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAnnounce"
+                    android:id="@+id/btnManageAnnouncements"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
-                    android:text="Announce"
+                    android:text="Manage Announcements"
                     app:icon="@drawable/ic_announcements" />
 
             </GridLayout>
@@ -280,7 +281,6 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation_menu_admin" />
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

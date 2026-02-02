@@ -1,63 +1,48 @@
 package com.barangay.pantal.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityManageAnnouncementsBinding
 import com.barangay.pantal.model.Announcement
+import com.barangay.pantal.ui.adapters.AnnouncementsAdapter
+import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.FirebaseDatabase
 
-class ManageAnnouncementsActivity : AppCompatActivity() {
+class ManageAnnouncementsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityManageAnnouncementsBinding
-    private var announcementId: String? = null
+    private lateinit var adapter: AnnouncementsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityManageAnnouncementsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        announcementId = intent.getStringExtra("announcement_id")
+        val query = FirebaseDatabase.getInstance().getReference("announcements")
+        val options = FirebaseRecyclerOptions.Builder<Announcement>()
+            .setQuery(query, Announcement::class.java)
+            .build()
 
-        if (announcementId != null) {
-            loadAnnouncementData()
+        adapter = AnnouncementsAdapter(true, options)
+        binding.announcementsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.announcementsRecyclerView.adapter = adapter
+
+        binding.newAnnouncementButton.setOnClickListener {
+            startActivity(Intent(this, AddAnnouncementActivity::class.java))
         }
 
-        binding.saveAnnouncementButton.setOnClickListener {
-            saveAnnouncement()
-        }
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_announcements)
     }
 
-    private fun loadAnnouncementData() {
-        val database = FirebaseDatabase.getInstance().getReference("announcements").child(announcementId!!)
-        database.get().addOnSuccessListener {
-            val announcement = it.getValue(Announcement::class.java)
-            if (announcement != null) {
-                binding.announcementTitleEditText.setText(announcement.title)
-                binding.announcementContentEditText.setText(announcement.content)
-                if (announcement.priority == "High") {
-                    binding.highPriorityRadioButton.isChecked = true
-                } else {
-                    binding.mediumPriorityRadioButton.isChecked = true
-                }
-            }
-        }
+    override fun onStart() {
+        super.onStart()
+        adapter.startListening()
     }
 
-    private fun saveAnnouncement() {
-        val title = binding.announcementTitleEditText.text.toString().trim()
-        val content = binding.announcementContentEditText.text.toString().trim()
-        val priority = if (binding.highPriorityRadioButton.isChecked) "High" else "Medium"
-        val timestamp = if (announcementId != null) announcementId!!.toLong() else System.currentTimeMillis()
-
-        if (title.isNotEmpty() && content.isNotEmpty()) {
-            val database = FirebaseDatabase.getInstance().getReference("announcements")
-            val newAnnouncement = Announcement(title, content, timestamp.toString(), priority, timestamp)
-
-            database.child(timestamp.toString()).setValue(newAnnouncement).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    finish()
-                }
-            }
-        }
+    override fun onStop() {
+        super.onStop()
+        adapter.stopListening()
     }
 }

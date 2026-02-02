@@ -31,16 +31,18 @@ class RequestsAdminAdapter(
         private val onApproveClick: (RequestAdmin) -> Unit,
         private val onRejectClick: (RequestAdmin) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
-        private val userIdTextView: TextView = itemView.findViewById(R.id.requestUserId)
-        private val serviceNameTextView: TextView = itemView.findViewById(R.id.requestServiceName)
-        private val statusTextView: TextView = itemView.findViewById(R.id.requestStatus)
-        private val approveButton: Button = itemView.findViewById(R.id.approveRequestButton)
-        private val rejectButton: Button = itemView.findViewById(R.id.rejectRequestButton)
+        private val requestTypeTextView: TextView = itemView.findViewById(R.id.tvRequestType)
+        private val requestStatusTextView: TextView = itemView.findViewById(R.id.tvRequestStatus)
+        private val requesterNameTextView: TextView = itemView.findViewById(R.id.tvRequesterName)
+        private val approveButton: Button = itemView.findViewById(R.id.btnApprove)
+        private val rejectButton: Button = itemView.findViewById(R.id.btnReject)
 
         fun bind(request: RequestAdmin) {
-            userIdTextView.text = request.userId
-            serviceNameTextView.text = request.serviceName
-            statusTextView.text = request.status
+            // Assuming RequestAdmin has properties like 'serviceName', 'status', and 'userName'
+            // You might need to adjust these based on your actual RequestAdmin model
+            requesterNameTextView.text = request.userId
+            requestTypeTextView.text = request.serviceName
+            requestStatusTextView.text = request.status
             approveButton.setOnClickListener { onApproveClick(request) }
             rejectButton.setOnClickListener { onRejectClick(request) }
         }

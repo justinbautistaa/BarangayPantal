@@ -1,7 +1,9 @@
 package com.barangay.pantal.ui.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
@@ -93,16 +95,26 @@ class SignupActivity : BaseActivity() {
     private fun saveUserToDatabase(uid: String, fullName: String, email: String) {
         val database = FirebaseDatabase.getInstance().reference.child("users").child(uid)
         val user = User(fullName, email, "user")
+        Log.d("SignupActivity", "Saving user: $user")
 
         database.setValue(user).addOnCompleteListener {
             binding.progressBar.visibility = View.GONE
             if (it.isSuccessful) {
+                saveUserRole("user")
                 Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, UserDashboardActivity::class.java))
                 finishAffinity()
             } else {
                 Toast.makeText(this, "Failed to save user data: ${it.exception?.message}", Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    private fun saveUserRole(role: String) {
+        val sharedPref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("user_role", role)
+            apply()
         }
     }
 }

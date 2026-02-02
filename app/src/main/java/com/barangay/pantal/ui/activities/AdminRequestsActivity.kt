@@ -6,17 +6,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityAdminRequestsBinding
 import com.barangay.pantal.model.Request
-import com.barangay.pantal.ui.adapters.RequestsAdapter
+import com.barangay.pantal.ui.adapters.RequestAdapter
 import com.google.android.material.chip.Chip
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class AdminRequestsActivity : BaseActivity(), RequestsAdapter.OnRequestInteractionListener {
+class AdminRequestsActivity : BaseActivity(), RequestAdapter.OnRequestInteractionListener {
 
     private lateinit var binding: ActivityAdminRequestsBinding
-    private lateinit var adapter: RequestsAdapter
+    private lateinit var adapter: RequestAdapter
     private val requests = mutableListOf<Request>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +24,7 @@ class AdminRequestsActivity : BaseActivity(), RequestsAdapter.OnRequestInteracti
         binding = ActivityAdminRequestsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = RequestsAdapter(this, mutableListOf(), this)
+        adapter = RequestAdapter(this, mutableListOf(), this, true)
         binding.rvRequests.layoutManager = LinearLayoutManager(this)
         binding.rvRequests.adapter = adapter
 
@@ -37,39 +37,12 @@ class AdminRequestsActivity : BaseActivity(), RequestsAdapter.OnRequestInteracti
             }
         }
 
-        binding.bottomNavigation.selectedItemId = R.id.navigation_requests
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_requests)
 
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_dashboard -> {
-                    val intent = Intent(this, AdminDashboardActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    startActivity(intent)
-                    true
-                }
-                R.id.navigation_announcements -> {
-                    startActivity(Intent(this, AnnouncementsActivity::class.java))
-                    true
-                }
-                R.id.navigation_requests -> {
-                    true
-                }
-                R.id.navigation_households -> {
-                    startActivity(Intent(this, HouseholdsActivity::class.java))
-                    true
-                }
-                 R.id.navigation_residents -> {
-                    startActivity(Intent(this, ResidentsActivity::class.java))
-                    true
-                }
-                else -> false
-            }
-        }
-
-        fetchAllRequests()
+        fetchRequests()
     }
 
-    private fun fetchAllRequests() {
+    private fun fetchRequests() {
         val database = FirebaseDatabase.getInstance().getReference("requests")
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -100,19 +73,19 @@ class AdminRequestsActivity : BaseActivity(), RequestsAdapter.OnRequestInteracti
     }
 
     override fun onViewRequest(request: Request) {
-        // Future enhancement: show a dialog with more details
+        // Handle view request
     }
 
     override fun onApproveRequest(request: Request) {
-        updateRequestStatus(request, "Processing")
+        updateRequestStatus(request, "Approved")
     }
 
     override fun onRejectRequest(request: Request) {
         updateRequestStatus(request, "Rejected")
     }
 
-    private fun updateRequestStatus(request: Request, newStatus: String) {
-        val database = FirebaseDatabase.getInstance().getReference("requests").child(request.id)
-        database.child("status").setValue(newStatus)
+    private fun updateRequestStatus(request: Request, status: String) {
+        val database = FirebaseDatabase.getInstance().getReference("requests")
+        database.child(request.id).child("status").setValue(status)
     }
 }

@@ -1,5 +1,6 @@
 package com.barangay.pantal.ui.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,16 @@ class RequestsActivity : BaseActivity(), RequestAdapter.OnRequestInteractionList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sharedPref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val userRole = sharedPref.getString("user_role", "user")
+
+        if (userRole == "admin") {
+            startActivity(Intent(this, AdminRequestsActivity::class.java))
+            finish()
+            return
+        }
+
         binding = ActivityRequestsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
