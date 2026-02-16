@@ -20,16 +20,9 @@ class HouseholdsActivity : BaseActivity() {
         binding = ActivityHouseholdsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupRecyclerView()
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        binding.addHouseholdButton.setOnClickListener {
-            startActivity(Intent(this, AddHouseholdActivity::class.java))
-        }
-
-        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_households)
-    }
-
-    private fun setupRecyclerView() {
         val query = FirebaseDatabase.getInstance().reference.child("households")
         val options = FirebaseRecyclerOptions.Builder<Household>()
             .setQuery(query, Household::class.java)
@@ -38,6 +31,13 @@ class HouseholdsActivity : BaseActivity() {
         adapter = HouseholdAdapter(options)
         binding.householdsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.householdsRecyclerView.adapter = adapter
+        binding.householdsRecyclerView.itemAnimator = null
+
+        binding.addHouseholdButton.setOnClickListener {
+            startActivity(Intent(this, AddHouseholdActivity::class.java))
+        }
+
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_households)
     }
 
     override fun onStart() {

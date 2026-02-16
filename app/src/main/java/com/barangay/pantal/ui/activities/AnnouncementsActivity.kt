@@ -20,17 +20,24 @@ class AnnouncementsActivity : BaseActivity() {
         binding = ActivityAnnouncementsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val query = FirebaseDatabase.getInstance().getReference("announcements")
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+        val query = FirebaseDatabase.getInstance().getReference("announcements").orderByChild("timestamp")
         val options = FirebaseRecyclerOptions.Builder<Announcement>()
             .setQuery(query, Announcement::class.java)
             .build()
 
         adapter = AnnouncementsAdapter(getUserRole() == "admin", options)
-        binding.announcementsRecyclerView.layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.reverseLayout = true
+        layoutManager.stackFromEnd = true
+        binding.announcementsRecyclerView.layoutManager = layoutManager
         binding.announcementsRecyclerView.adapter = adapter
+        binding.announcementsRecyclerView.itemAnimator = null
 
         binding.newAnnouncementButton.setOnClickListener {
-            startActivity(Intent(this, MakeAnnouncementActivity::class.java))
+            startActivity(Intent(this, AddAnnouncementActivity::class.java))
         }
 
         setupBottomNavigation(binding.bottomNavigation, R.id.navigation_announcements)

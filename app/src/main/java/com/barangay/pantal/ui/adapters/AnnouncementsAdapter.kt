@@ -1,5 +1,6 @@
 package com.barangay.pantal.ui.adapters
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -45,8 +46,8 @@ class AnnouncementsAdapter(private val isAdmin: Boolean, options: FirebaseRecycl
             tvPriority.text = announcement.priority
 
             val priorityColor = when (announcement.priority) {
-                "High" -> R.color.priority_high
-                "Medium" -> R.color.priority_medium
+                "high" -> R.color.priority_high
+                "medium" -> R.color.priority_medium
                 else -> R.color.gray_light
             }
             tvPriority.background.setTint(ContextCompat.getColor(itemView.context, priorityColor))
@@ -60,14 +61,23 @@ class AnnouncementsAdapter(private val isAdmin: Boolean, options: FirebaseRecycl
                 }
 
                 btnDelete.setOnClickListener {
-                    Log.d("AnnouncementsAdapter", "Deleting announcement with timestamp: ${announcement.timestamp}")
-                    snapshots.getSnapshot(adapterPosition).ref.removeValue()
-                        .addOnSuccessListener {
-                            Log.d("AnnouncementsAdapter", "Announcement deleted successfully.")
+                    AlertDialog.Builder(itemView.context)
+                        .setTitle("Delete Announcement")
+                        .setMessage("Are you sure you want to delete this announcement?")
+                        .setPositiveButton("Delete") { _, _ ->
+                            val position = adapterPosition
+                            if (position != RecyclerView.NO_POSITION) {
+                                snapshots.getSnapshot(position).ref.removeValue()
+                                    .addOnSuccessListener {
+                                        Log.d("AnnouncementsAdapter", "Announcement deleted successfully.")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("AnnouncementsAdapter", "Failed to delete announcement.", e)
+                                    }
+                            }
                         }
-                        .addOnFailureListener { e ->
-                            Log.e("AnnouncementsAdapter", "Failed to delete announcement.", e)
-                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
                 }
             } else {
                 adminButtons.visibility = View.GONE

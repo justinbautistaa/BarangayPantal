@@ -73,7 +73,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardHouseholds"
+            android:id="@+id/cardServices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="12dp">
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:text="Households"
+                android:text="Services"
                 android:textColor="@color/gray_dark"
                 android:textSize="16sp" />
         </androidx.cardview.widget.CardView>

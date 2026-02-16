@@ -16,7 +16,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Full Name">
+            android:hint="@string/signup_fullname_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/name_edit_text"
@@ -27,9 +27,9 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android.layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Email">
+            android:hint="@string/login_email_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/email_edit_text"
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Password"
+            android:hint="@string/login_password_hint"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Confirm Password"
+            android:hint="@string/signup_confirm_password_hint"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Sign Up" />
+            android:text="@string/signup_button_text" />
 
         <TextView
             android:id="@+id/login_text_view"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Already have an account? Login" />
+            android:text="@string/signup_login_text" />
 
     </LinearLayout>
 

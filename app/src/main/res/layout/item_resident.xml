@@ -72,9 +72,10 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/more_options"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_forward" />
+                android:src="@drawable/ic_more_vert" />
 
         </LinearLayout>
 
@@ -84,40 +85,5 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/view_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:text="View"
-                app:icon="@drawable/ic_view" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/edit_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:text="Edit"
-                app:icon="@drawable/ic_edit" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/delete_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Delete"
-                app:icon="@drawable/ic_delete"
-                app:strokeColor="@color/red_status" />
-        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

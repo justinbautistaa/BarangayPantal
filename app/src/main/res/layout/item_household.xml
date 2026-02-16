@@ -124,15 +124,6 @@
                     android:text="View"
                     app:icon="@drawable/ic_view" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/edit_button"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:text="Edit"
-                    app:icon="@drawable/ic_edit" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

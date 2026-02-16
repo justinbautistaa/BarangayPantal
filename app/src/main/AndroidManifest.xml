@@ -9,21 +9,32 @@
 
         <activity
             android:name=".ui.activities.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.BarangayPantal.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.AdminDashboardActivity" />
-        <activity android:name=".ui.activities.UserDashboardActivity" />
+        <activity
+            android:name=".ui.activities.AdminDashboardActivity"
+            android:theme="@style/Theme.BarangayPantal.NoActionBar" />
+        <activity
+            android:name=".ui.activities.UserDashboardActivity"
+            android:theme="@style/Theme.BarangayPantal.NoActionBar" />
         <activity android:name=".ui.activities.ResidentsActivity" />
         <activity android:name=".ui.activities.AddResidentActivity" />
         <activity android:name=".ui.activities.ViewResidentActivity" />
         <activity android:name=".ui.activities.SignupActivity" />
         <activity android:name=".ui.activities.HouseholdsActivity" />
-        <activity android:name=".ui.activities.AddHouseholdActivity" />
+        <activity
+            android:name=".ui.activities.AddHouseholdActivity"
+            android:parentActivityName=".ui.activities.HouseholdsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.HouseholdsActivity" />
+        </activity>
         <activity android:name=".ui.activities.AnnouncementsActivity" />
         <activity android:name=".ui.activities.ServicesActivity" />
         <activity android:name=".ui.activities.RequestServiceActivity" />
@@ -31,13 +42,12 @@
         <activity android:name=".ui.activities.AdminRequestsActivity" />
         <activity android:name=".ui.activities.ReportsActivity" />
         <activity android:name=".ui.activities.MoreActivity" />
-        <activity android:name=".ui.activities.PhoneAuthActivity" />
         <activity android:name=".ui.activities.ManageAnnouncementsActivity" />
         <activity android:name=".ui.activities.AddAnnouncementActivity" />
-        <activity android:name=".ui.activities.MakeAnnouncementActivity" />
         <activity android:name=".ui.activities.ManageServicesActivity" />
         <activity android:name=".ui.activities.ManageRequestsActivity" />
         <activity android:name=".ui.activities.ManageReportsActivity" />
+        <activity android:name=".ui.activities.AddReportActivity" />
 
     </application>
 

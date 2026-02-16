@@ -27,6 +27,9 @@ class ResidentsActivity : BaseActivity() {
         binding = ActivityResidentsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         setupRecyclerView()
         setupSearchView()
         fetchResidents()

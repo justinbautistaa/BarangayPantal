@@ -3,6 +3,7 @@ package com.barangay.pantal.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
@@ -57,6 +58,7 @@ class LoginActivity : BaseActivity() {
         }
 
         binding.progressBar.visibility = View.VISIBLE
+        binding.loginButton.isEnabled = false
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -66,10 +68,12 @@ class LoginActivity : BaseActivity() {
                         fetchUserRoleAndNavigate(firebaseUser.uid)
                     } else {
                         binding.progressBar.visibility = View.GONE
+                        binding.loginButton.isEnabled = true
                         Toast.makeText(this, "Login failed. Please try again.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     binding.progressBar.visibility = View.GONE
+                    binding.loginButton.isEnabled = true
                     Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
             }
@@ -80,7 +84,9 @@ class LoginActivity : BaseActivity() {
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val role = snapshot.child("role").getValue(String::class.java)
+                Log.d("LoginActivity", "User role: $role")
                 binding.progressBar.visibility = View.GONE
+                binding.loginButton.isEnabled = true
 
                 if (role != null) {
                     saveUserRole(role)
@@ -99,6 +105,7 @@ class LoginActivity : BaseActivity() {
 
             override fun onCancelled(error: DatabaseError) {
                 binding.progressBar.visibility = View.GONE
+                binding.loginButton.isEnabled = true
                 Toast.makeText(this@LoginActivity, "Failed to fetch user role: ${error.message}", Toast.LENGTH_LONG).show()
             }
         })

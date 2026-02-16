@@ -7,4 +7,12 @@
     <string name="view">View</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button_text">Login</string>
+    <string name="login_signup_text">Don\'t have an account? Sign up</string>
+    <string name="signup_fullname_hint">Full Name</string>
+    <string name="signup_confirm_password_hint">Confirm Password</string>
+    <string name="signup_button_text">Sign Up</string>
+    <string name="signup_login_text">Already have an account? Login</string>
 </resources>

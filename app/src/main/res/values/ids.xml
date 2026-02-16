@@ -1,1 +1,14 @@
-<resources></resources>
+<resources>
+    <item name="tvTotalResidents" type="id" />
+    <item name="card_households" type="id" />
+    <item name="tvTotalHouseholds" type="id" />
+    <item name="tvSeniorCitizens" type="id" />
+    <item name="card_requests" type="id" />
+    <item name="tvPendingRequests" type="id" />
+    <item name="btnAddResident" type="id" />
+    <item name="btnReports" type="id" />
+    <item name="btnRequests" type="id" />
+    <item name="btnManageAnnouncements" type="id" />
+    <item name="rvRecentActivity" type="id" />
+    <item name="rvRecentRequests" type="id" />
+</resources>

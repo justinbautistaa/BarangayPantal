@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.barangay.pantal.R
 import com.barangay.pantal.model.HouseholdMember
 
-class HouseholdMemberAdapter(private val members: List<HouseholdMember>) :
+class HouseholdMemberAdapter(private var members: List<HouseholdMember>) :
     RecyclerView.Adapter<HouseholdMemberAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,6 +23,13 @@ class HouseholdMemberAdapter(private val members: List<HouseholdMember>) :
     }
 
     override fun getItemCount() = members.size
+
+    fun updateData(newMembers: List<HouseholdMember>) {
+        val diffCallback = HouseholdMemberDiffCallback(this.members, newMembers)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
+        this.members = newMembers
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val initial: TextView = itemView.findViewById(R.id.initial)
@@ -41,5 +49,24 @@ class HouseholdMemberAdapter(private val members: List<HouseholdMember>) :
                 role.visibility = View.GONE
             }
         }
+    }
+}
+
+class HouseholdMemberDiffCallback(
+    private val oldList: List<HouseholdMember>,
+    private val newList: List<HouseholdMember>
+) : DiffUtil.Callback() {
+
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        // In a real app, you'd probably use a unique ID here
+        return oldList[oldItemPosition].name == newList[newItemPosition].name
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }

@@ -1,7 +1,10 @@
 package com.barangay.pantal.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.app.NavUtils
 import com.barangay.pantal.databinding.ActivityAddHouseholdBinding
 import com.barangay.pantal.model.Household
 import com.google.firebase.database.FirebaseDatabase
@@ -15,9 +18,21 @@ class AddHouseholdActivity : BaseActivity() {
         binding = ActivityAddHouseholdBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         binding.saveHouseholdButton.setOnClickListener {
             saveHousehold()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            val upIntent = Intent(this, HouseholdsActivity::class.java)
+            NavUtils.navigateUpTo(this, upIntent)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun saveHousehold() {

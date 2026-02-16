@@ -34,26 +34,11 @@ class UserDashboardActivity : BaseActivity() {
             startActivity(Intent(this, ServicesActivity::class.java))
         }
 
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_dashboard -> {
-                    true
-                }
-                R.id.navigation_announcements -> {
-                    startActivity(Intent(this, AnnouncementsActivity::class.java))
-                    true
-                }
-                R.id.navigation_requests -> {
-                    startActivity(Intent(this, RequestsActivity::class.java))
-                    true
-                }
-                R.id.navigation_services -> {
-                    startActivity(Intent(this, ServicesActivity::class.java))
-                    true
-                }
-                else -> false
-            }
+        binding.cardOfficials.setOnClickListener {
+            startActivity(Intent(this, OfficialsActivity::class.java))
         }
+
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_dashboard)
     }
 
     override fun onResume() {

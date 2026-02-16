@@ -1,37 +1,29 @@
 package com.barangay.pantal.ui.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.barangay.pantal.R
+import com.barangay.pantal.databinding.ItemReportBinding
 import com.barangay.pantal.model.Report
 
-class ReportAdapter(private val context: Context, private val reports: List<Report>) :
-    RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
+class ReportAdapter(private val reports: List<Report>) : RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_report, parent, false)
-        return ReportViewHolder(view)
+        val binding = ItemReportBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ReportViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
-        val report = reports[position]
-        holder.bind(report)
+        holder.bind(reports[position])
     }
 
-    override fun getItemCount(): Int = reports.size
+    override fun getItemCount() = reports.size
 
-    inner class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvReportTitle: TextView = itemView.findViewById(R.id.tvReportTitle)
-        private val tvReportDate: TextView = itemView.findViewById(R.id.tvReportDate)
-
+    inner class ReportViewHolder(private val binding: ItemReportBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(report: Report) {
-            tvReportTitle.text = report.title
-            tvReportDate.text = report.date
+            binding.reportTitle.text = report.title
+            binding.reportDescription.text = report.description
+            binding.reportDate.text = report.date
         }
     }
 }

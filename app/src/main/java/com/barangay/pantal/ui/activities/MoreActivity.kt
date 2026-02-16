@@ -18,8 +18,8 @@ class MoreActivity : AppCompatActivity() {
             startActivity(Intent(this, ReportsActivity::class.java))
         }
 
-        binding.cardHouseholds.setOnClickListener {
-            startActivity(Intent(this, HouseholdsActivity::class.java))
+        binding.cardServices.setOnClickListener {
+            startActivity(Intent(this, ServicesActivity::class.java))
         }
     }
 }

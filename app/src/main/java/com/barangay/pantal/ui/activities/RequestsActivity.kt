@@ -56,30 +56,7 @@ class RequestsActivity : BaseActivity(), RequestAdapter.OnRequestInteractionList
             }
         }
 
-        binding.bottomNavigation.selectedItemId = R.id.navigation_requests
-
-        binding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_dashboard -> {
-                    val intent = Intent(this, UserDashboardActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    startActivity(intent)
-                    true
-                }
-                R.id.navigation_announcements -> {
-                    startActivity(Intent(this, AnnouncementsActivity::class.java))
-                    true
-                }
-                R.id.navigation_requests -> {
-                    true
-                }
-                R.id.navigation_services -> {
-                    startActivity(Intent(this, ServicesActivity::class.java))
-                    true
-                }
-                else -> false
-            }
-        }
+        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_requests)
 
         fetchRequests()
     }

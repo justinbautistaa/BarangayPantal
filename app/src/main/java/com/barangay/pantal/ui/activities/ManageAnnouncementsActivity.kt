@@ -2,6 +2,7 @@ package com.barangay.pantal.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityManageAnnouncementsBinding
@@ -20,6 +21,9 @@ class ManageAnnouncementsActivity : BaseActivity() {
         binding = ActivityManageAnnouncementsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val query = FirebaseDatabase.getInstance().getReference("announcements")
         val options = FirebaseRecyclerOptions.Builder<Announcement>()
             .setQuery(query, Announcement::class.java)
@@ -34,6 +38,14 @@ class ManageAnnouncementsActivity : BaseActivity() {
         }
 
         setupBottomNavigation(binding.bottomNavigation, R.id.navigation_announcements)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {

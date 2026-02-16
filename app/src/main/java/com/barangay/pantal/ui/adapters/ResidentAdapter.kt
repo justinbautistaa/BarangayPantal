@@ -2,7 +2,9 @@ package com.barangay.pantal.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ItemResidentBinding
 import com.barangay.pantal.model.Resident
 import com.google.android.material.chip.Chip
@@ -48,16 +50,27 @@ class ResidentAdapter(
                 binding.tags.addView(createTagChip("PWD"))
             }
 
-            binding.viewButton.setOnClickListener {
+            binding.root.setOnClickListener {
                 onViewClick(resident)
             }
 
-            binding.editButton.setOnClickListener {
-                onEditClick(resident)
-            }
-
-            binding.deleteButton.setOnClickListener {
-                onDeleteClick(resident.id)
+            binding.moreOptions.setOnClickListener { view ->
+                val popup = PopupMenu(binding.root.context, view)
+                popup.inflate(R.menu.resident_item_menu)
+                popup.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.menu_edit_resident -> {
+                            onEditClick(resident)
+                            true
+                        }
+                        R.id.menu_delete_resident -> {
+                            onDeleteClick(resident.id)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                popup.show()
             }
         }
 

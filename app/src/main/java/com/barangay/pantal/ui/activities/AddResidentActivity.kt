@@ -1,7 +1,7 @@
 package com.barangay.pantal.ui.activities
 
 import android.os.Bundle
-import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import com.barangay.pantal.databinding.ActivityAddResidentBinding
 import com.barangay.pantal.model.Resident
@@ -20,6 +20,10 @@ class AddResidentActivity : BaseActivity() {
         binding = ActivityAddResidentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         residentId = intent.getStringExtra("residentId")
 
         if (residentId != null) {
@@ -29,6 +33,14 @@ class AddResidentActivity : BaseActivity() {
         binding.saveButton.setOnClickListener {
             saveResident()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun loadResidentData() {
@@ -42,9 +54,9 @@ class AddResidentActivity : BaseActivity() {
                     binding.genderEditText.setText(resident.gender)
                     binding.addressEditText.setText(resident.address)
                     binding.occupationEditText.setText(resident.occupation)
-                    binding.voterCheckBox.isChecked = resident.isVoter
-                    binding.seniorCheckBox.isChecked = resident.isSenior
-                    binding.pwdCheckBox.isChecked = resident.isPwd
+                    binding.voterSwitch.isChecked = resident.isVoter
+                    binding.seniorSwitch.isChecked = resident.isSenior
+                    binding.pwdSwitch.isChecked = resident.isPwd
                 }
             }
 
@@ -60,9 +72,9 @@ class AddResidentActivity : BaseActivity() {
         val gender = binding.genderEditText.text.toString().trim()
         val address = binding.addressEditText.text.toString().trim()
         val occupation = binding.occupationEditText.text.toString().trim()
-        val isVoter = binding.voterCheckBox.isChecked
-        val isSenior = binding.seniorCheckBox.isChecked
-        val isPwd = binding.pwdCheckBox.isChecked
+        val isVoter = binding.voterSwitch.isChecked
+        val isSenior = binding.seniorSwitch.isChecked
+        val isPwd = binding.pwdSwitch.isChecked
 
         if (name.isEmpty() || gender.isEmpty() || address.isEmpty() || occupation.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
@@ -73,8 +85,8 @@ class AddResidentActivity : BaseActivity() {
         val currentResidentId = residentId ?: database.push().key!!
 
         val resident = Resident(currentResidentId, name, age, gender, address, occupation, isVoter, isSenior, isPwd)
-        database.child(currentResidentId).setValue(resident).addOnCompleteListener {
-            if (it.isSuccessful) {
+        database.child(currentResidentId).setValue(resident).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
                 Toast.makeText(this, "Resident saved successfully", Toast.LENGTH_SHORT).show()
                 finish()
             } else {

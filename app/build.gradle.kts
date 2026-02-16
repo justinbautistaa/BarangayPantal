@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.barangay.pantal"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.barangay.pantal"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -51,6 +51,7 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-database:8.0.2") {
         exclude(group = "com.facebook.android")
     }
+    implementation(libs.picasso)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

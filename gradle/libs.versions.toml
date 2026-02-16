@@ -1,18 +1,19 @@
 [versions]
 agp = "8.13.2"
 kotlin = "2.2.10"
-coreKtx = "1.12.0"
+coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-appcompat = "1.6.1"
-material = "1.11.0"
+appcompat = "1.7.1"
+material = "1.13.0"
 activity = "1.8.0"
-constraintlayout = "2.1.4"
+constraintlayout = "2.2.1"
 googleGmsGoogleServices = "4.4.1"
 firebaseDatabase = "22.0.1"
 firebaseAuth = "24.0.1"
 playServicesAuth = "21.5.0"
+picasso = "2.71828"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,6 +27,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
+picasso = { group = "com.squareup.picasso", name = "picasso", version.ref = "picasso" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
