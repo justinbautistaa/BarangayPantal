@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/announcement_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_announcement"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/announcement_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Barangay Assembly Meeting"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            app:layout_constraintEnd_toStartOf="@+id/priority_layout"
+            app:layout_constraintStart_toEndOf="@+id/announcement_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/announcement_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="All residents are invited to attend the quarterly barangay assembly on January 25, 2026 at 2:00 PM at the Barangay Hall."
+            app:layout_constraintEnd_toEndOf="@+id/announcement_title"
+            app:layout_constraintStart_toStartOf="@+id/announcement_title"
+            app:layout_constraintTop_toBottomOf="@+id/announcement_title" />
+
+        <TextView
+            android:id="@+id/announcement_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="2026-01-15"
+            app:layout_constraintStart_toStartOf="@+id/announcement_content"
+            app:layout_constraintTop_toBottomOf="@+id/announcement_content" />
+
+        <LinearLayout
+            android:id="@+id/priority_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/status_high"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/priority_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="high"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/resident_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Juan dela Cruz"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/resident_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="45"
+            app:layout_constraintStart_toEndOf="@+id/resident_name"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/resident_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Block 1, Lot 5, Pantal, Dagupan City"
+            app:layout_constraintEnd_toStartOf="@+id/view_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/resident_name" />
+
+        <TextView
+            android:id="@+id/resident_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="09171234567"
+            app:layout_constraintEnd_toEndOf="@+id/resident_address"
+            app:layout_constraintTop_toBottomOf="@+id/resident_address" />
+
+        <LinearLayout
+            android:id="@+id/status_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/voter_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/status_voter"
+                android:padding="8dp"
+                android:text="Voter"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/senior_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/status_senior"
+                android:padding="8dp"
+                android:text="Senior"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/pwd_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/status_pwd"
+                android:padding="8dp"
+                android:text="PWD"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/view_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View"
+            app:icon="@drawable/ic_eye"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_layout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

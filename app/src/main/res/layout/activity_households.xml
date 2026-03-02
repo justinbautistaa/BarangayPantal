@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.activities.HouseholdsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -17,7 +20,9 @@
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_back"
             app:title="Brgy. Pantal"
-            app:subtitle="Dagupan City" />
+            app:titleTextColor="@color/black"
+            app:subtitle="Dagupan City"
+            app:subtitleTextColor="@color/gray_dark" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -33,7 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            app:queryHint="Search households..." />
+            android:background="@drawable/search_background"
+            app:queryHint="Search households..."
+            app:iconTint="@color/purple_login" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add_household_button"
@@ -42,7 +49,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="Add Household"
-            app:icon="@drawable/ic_add" />
+            android:backgroundTint="@color/purple_login"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/households_recycler_view"
@@ -59,6 +69,9 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        app:itemIconTint="@color/bottom_nav_icon_tint"
+        app:itemTextColor="@color/bottom_nav_icon_tint" />
 
 </RelativeLayout>

@@ -4,18 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.AdminRequestsActivity">
+    android:background="@color/white"
+    tools:context=".ui.activities.admin.AdminRequestsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="Manage Requests" />
+            app:title="Manage Requests"
+            app:titleTextColor="@color/black" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -31,31 +35,43 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipAll"
-            style="@style/Widget.MaterialComponents.Chip.Filter"
+            style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All" />
+            android:text="All"
+            app:chipBackgroundColor="@color/white"
+            app:chipStrokeColor="@color/purple_login"
+            android:textColor="@color/purple_login" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipPending"
-            style="@style/Widget.MaterialComponents.Chip.Filter"
+            style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pending" />
+            android:text="Pending"
+            app:chipBackgroundColor="@color/white"
+            app:chipStrokeColor="@color/purple_login"
+            android:textColor="@color/purple_login" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipApproved"
-            style="@style/Widget.MaterialComponents.Chip.Filter"
+            style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Approved" />
+            android:text="Approved"
+            app:chipBackgroundColor="@color/white"
+            app:chipStrokeColor="@color/purple_login"
+            android:textColor="@color/purple_login" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipRejected"
-            style="@style/Widget.MaterialComponents.Chip.Filter"
+            style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rejected" />
+            android:text="Rejected"
+            app:chipBackgroundColor="@color/white"
+            app:chipStrokeColor="@color/purple_login"
+            android:textColor="@color/purple_login" />
 
     </com.google.android.material.chip.ChipGroup>
 
@@ -73,6 +89,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        app:itemIconTint="@color/bottom_nav_icon_tint"
+        app:itemTextColor="@color/bottom_nav_icon_tint"
         app:menu="@menu/admin_bottom_navigation_menu" />
 
 </RelativeLayout>

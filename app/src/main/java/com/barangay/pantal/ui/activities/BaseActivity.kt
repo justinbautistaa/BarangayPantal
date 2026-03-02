@@ -5,8 +5,23 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.barangay.pantal.R
+import com.barangay.pantal.ui.activities.admin.AdminAnnouncementsActivity
+import com.barangay.pantal.ui.activities.admin.AdminDashboardActivity
+import com.barangay.pantal.ui.activities.admin.AdminRequestsActivity
+import com.barangay.pantal.ui.activities.admin.HouseholdsActivity
+import com.barangay.pantal.ui.activities.admin.ResidentsActivity
+import com.barangay.pantal.ui.activities.staff.StaffActivityLogActivity
+import com.barangay.pantal.ui.activities.staff.StaffAnnouncementsActivity
+import com.barangay.pantal.ui.activities.staff.StaffDashboardActivity
+import com.barangay.pantal.ui.activities.staff.StaffHouseholdsActivity
+import com.barangay.pantal.ui.activities.staff.StaffRequestsActivity
+import com.barangay.pantal.ui.activities.staff.StaffResidentsActivity
+import com.barangay.pantal.ui.activities.user.AnnouncementsActivity
+import com.barangay.pantal.ui.activities.user.MoreActivity
+import com.barangay.pantal.ui.activities.user.RequestsActivity
+import com.barangay.pantal.ui.activities.user.UserDashboardActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
+import java.util.Locale
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -20,11 +35,11 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun setupBottomNavigation(navView: BottomNavigationView, selectedItemId: Int) {
-        val isAdmin = getUserRole() == "admin"
-        val menuRes = if (isAdmin) {
-            R.menu.admin_bottom_navigation_menu
-        } else {
-            R.menu.user_bottom_navigation_menu
+        val userRole = getUserRole().lowercase(Locale.getDefault())
+        val menuRes = when (userRole) {
+            "admin" -> R.menu.admin_bottom_navigation_menu
+            "staff" -> R.menu.staff_bottom_navigation_menu
+            else -> R.menu.user_bottom_navigation_menu
         }
 
         navView.menu.clear()
@@ -37,18 +52,45 @@ open class BaseActivity : AppCompatActivity() {
             }
 
             val targetActivity = when (item.itemId) {
-                R.id.navigation_dashboard -> if (isAdmin) AdminDashboardActivity::class.java else UserDashboardActivity::class.java
-                R.id.navigation_announcements -> AnnouncementsActivity::class.java
-                R.id.navigation_requests -> if (isAdmin) AdminRequestsActivity::class.java else RequestsActivity::class.java
-                R.id.navigation_households -> if (isAdmin) HouseholdsActivity::class.java else null
-                R.id.navigation_residents -> if (isAdmin) ResidentsActivity::class.java else null
-                R.id.navigation_more -> if (isAdmin) MoreActivity::class.java else null
+                R.id.navigation_dashboard -> when (userRole) {
+                    "admin" -> com.barangay.pantal.ui.activities.admin.AdminDashboardActivity::class.java
+                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffDashboardActivity::class.java
+                    else -> com.barangay.pantal.ui.activities.user.UserDashboardActivity::class.java
+                }
+                R.id.navigation_requests -> when (userRole) {
+                    "admin" -> com.barangay.pantal.ui.activities.admin.AdminRequestsActivity::class.java
+                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffRequestsActivity::class.java
+                    else -> com.barangay.pantal.ui.activities.user.RequestsActivity::class.java
+                }
+                R.id.navigation_residents -> when (userRole) {
+                    "admin" -> com.barangay.pantal.ui.activities.admin.ResidentsActivity::class.java
+                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffResidentsActivity::class.java
+                    else -> null
+                }
+                R.id.navigation_households -> when (userRole) {
+                    "admin" -> com.barangay.pantal.ui.activities.admin.HouseholdsActivity::class.java
+                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffHouseholdsActivity::class.java
+                    else -> null
+                }
+                R.id.navigation_announcements -> when (userRole) {
+                    "admin" -> com.barangay.pantal.ui.activities.admin.AdminAnnouncementsActivity::class.java
+                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffAnnouncementsActivity::class.java
+                    else -> com.barangay.pantal.ui.activities.user.AnnouncementsActivity::class.java
+                }
+                R.id.navigation_staff_management -> when (userRole) {
+                    "admin" -> com.barangay.pantal.ui.activities.admin.StaffManagementActivity::class.java
+                    else -> null
+                }
+                R.id.navigation_activity_log -> when (userRole) {
+                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffActivityLogActivity::class.java
+                    else -> null
+                }
+                R.id.navigation_more -> if (userRole == "user") com.barangay.pantal.ui.activities.user.MoreActivity::class.java else null
                 else -> null
             }
 
             if (targetActivity != null) {
                 val intent = Intent(this, targetActivity)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 true
             } else {

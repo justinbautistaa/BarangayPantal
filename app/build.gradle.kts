@@ -48,10 +48,23 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
-    implementation("com.firebaseui:firebase-ui-database:8.0.2") {
+    
+    // Credential Manager for Google Sign-In
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    implementation("com.firebaseui:firebase-ui-database:9.1.1") {
         exclude(group = "com.facebook.android")
     }
     implementation(libs.picasso)
+
+    // Retrofit for DeepSeek API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

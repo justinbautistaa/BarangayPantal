@@ -20,4 +20,9 @@
         android:id="@+id/navigation_more"
         android:icon="@drawable/ic_more"
         android:title="More" />
+    <item
+        android:id="@+id/navigation_activity_log"
+        android:icon="@drawable/ic_activity_log"
+        android:title="Activity Log"
+        android:visible="false" />
 </menu>

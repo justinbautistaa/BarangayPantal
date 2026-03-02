@@ -3,21 +3,25 @@
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_dashboard"
-        android:title="Dashboard" />
+        android:title="@string/title_dashboard" />
     <item
         android:id="@+id/navigation_residents"
         android:icon="@drawable/ic_residents"
-        android:title="Residents" />
+        android:title="@string/title_residents" />
     <item
         android:id="@+id/navigation_households"
         android:icon="@drawable/ic_households"
-        android:title="Households" />
+        android:title="@string/title_households" />
     <item
         android:id="@+id/navigation_requests"
         android:icon="@drawable/ic_requests"
-        android:title="Requests" />
+        android:title="@string/title_requests" />
     <item
         android:id="@+id/navigation_announcements"
         android:icon="@drawable/ic_announcements"
-        android:title="Announcements" />
+        android:title="@string/title_announcements" />
+    <item
+        android:id="@+id/navigation_staff_management"
+        android:icon="@drawable/ic_person"
+        android:title="@string/title_staff_management" />
 </menu>

@@ -2,20 +2,17 @@ package com.barangay.pantal.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.barangay.pantal.R
+import com.barangay.pantal.databinding.ItemRecentActivityBinding
 import com.barangay.pantal.model.RecentActivity
 
 class RecentActivityAdapter(private val context: Context, private val recentActivity: List<RecentActivity>) :
     RecyclerView.Adapter<RecentActivityAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_recent_activity, parent, false)
-        return ViewHolder(view)
+        val binding = ItemRecentActivityBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -25,15 +22,10 @@ class RecentActivityAdapter(private val context: Context, private val recentActi
 
     override fun getItemCount(): Int = recentActivity.size
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
-        private val tvUser: TextView = itemView.findViewById(R.id.tvUser)
-        private val tvTimestamp: TextView = itemView.findViewById(R.id.tvTimestamp)
-
+    inner class ViewHolder(private val binding: ItemRecentActivityBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(activity: RecentActivity) {
-            tvTitle.text = activity.title
-            tvUser.text = activity.user
-            tvTimestamp.text = activity.timestamp
+            val activityText = "${activity.title} by ${activity.user} on ${activity.timestamp}"
+            binding.activityText.text = activityText
         }
     }
 }

@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.activities.ResidentsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -17,7 +20,9 @@
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_back"
             app:title="Brgy. Pantal"
-            app:subtitle="Dagupan City" />
+            app:titleTextColor="@color/black"
+            app:subtitle="Dagupan City"
+            app:subtitleTextColor="@color/gray_dark" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -25,7 +30,10 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        app:itemIconTint="@color/bottom_nav_icon_tint"
+        app:itemTextColor="@color/bottom_nav_icon_tint" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,21 +47,26 @@
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:queryHint="Search residents..." />
+            android:background="@drawable/search_background"
+            app:queryHint="Search residents..."
+            app:iconTint="@color/purple_login" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/filter_button"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Filter"
-                app:icon="@drawable/ic_filter" />
+                android:textColor="@color/purple_login"
+                app:strokeColor="@color/purple_login"
+                app:icon="@drawable/ic_filter"
+                app:iconTint="@color/purple_login" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_button"
@@ -61,7 +74,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="Add" />
+                android:text="Add Resident"
+                android:backgroundTint="@color/purple_login"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
@@ -70,6 +85,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             tools:text="6 RESIDENTS" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -89,6 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
+        android:indeterminateTint="@color/purple_login"
         tools:visibility="visible" />
 
 </RelativeLayout>

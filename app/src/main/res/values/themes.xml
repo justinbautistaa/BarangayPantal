@@ -5,9 +5,9 @@
         <item name="colorPrimary">@color/primary_blue</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/blue_500</item>
-        <item name="colorPrimaryVariant">@color/green_500</item>
-        <item name="colorSecondaryVariant">@color/purple_500</item>
-        <item name="colorAccent">@color/orange_500</item>
+        <item name="colorTertiary">@color/green_500</item>
+        <item name="colorSecondaryContainer">@color/purple_500</item>
+        <item name="colorSurface">@color/orange_500</item>
     </style>
 
     <style name="Theme.BarangayPantal" parent="Base.Theme.BarangayPantal" />
@@ -18,11 +18,11 @@
 
     <style name="Theme.BarangayPantal.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="Theme.BarangayPantal.Login" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.BarangayPantal.Login" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">@color/dark_background</item>
-        <item name="colorPrimary">@color/purple_login</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="colorSurface">@color/dark_surface</item>
+        <item name="android:windowBackground">@color/white</item> <!-- Changed from dark_background to white -->
+        <item name="colorPrimary">@color/purple_login</item> <!-- This is now pink -->
+        <item name="colorOnSurface">@color/black</item> <!-- Text will be black on white background -->
+        <item name="colorSurface">@color/white</item>
     </style>
 </resources>

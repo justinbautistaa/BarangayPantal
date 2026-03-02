@@ -15,4 +15,19 @@
     <string name="signup_confirm_password_hint">Confirm Password</string>
     <string name="signup_button_text">Sign Up</string>
     <string name="signup_login_text">Already have an account? Login</string>
+    <string name="default_web_client_id">961952650917-j7ttamjmqi751m77pmummugiruk4i2o1.apps.googleusercontent.com</string>
+
+    <!-- Resident Adapter Strings -->
+    <string name="resident_details">%d years • %s</string>
+    <string name="voter">Voter</string>
+    <string name="senior">Senior</string>
+    <string name="pwd">PWD</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_requests">Requests</string>
+    <string name="title_residents">Residents</string>
+    <string name="title_households">Households</string>
+    <string name="title_announcements">Announcements</string>
+    <string name="title_activity_log">Activity Log</string>
+    <string name="title_staff_management">Staff Management</string>
+    <string name="dummy_string">dummy</string>
 </resources>
