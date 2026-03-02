@@ -45,9 +45,14 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     implementation("androidx.cardview:cardview:1.0.0")
+    
+    // Firebase
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
-    implementation(libs.play.services.auth)
+    implementation("com.google.firebase:firebase-messaging-ktx:24.1.0")
+    
+    // Google ML Kit (Free OCR)
+    implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.1")
     
     // Credential Manager for Google Sign-In
     implementation("androidx.credentials:credentials:1.3.0")
@@ -59,7 +64,7 @@ dependencies {
     }
     implementation(libs.picasso)
 
-    // Retrofit for DeepSeek API
+    // Retrofit for Weather and other APIs
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")

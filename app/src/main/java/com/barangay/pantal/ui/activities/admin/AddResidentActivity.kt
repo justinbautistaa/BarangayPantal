@@ -1,8 +1,12 @@
 package com.barangay.pantal.ui.activities.admin
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.barangay.pantal.databinding.ActivityAddResidentBinding
 import com.barangay.pantal.model.Resident
 import com.barangay.pantal.ui.activities.BaseActivity
@@ -10,11 +14,26 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 class AddResidentActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAddResidentBinding
     private var residentId: String? = null
+    
+    private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+    private val selectImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data: Intent? = result.data
+            val imageUri: Uri? = data?.data
+            if (imageUri != null) {
+                processImage(imageUri)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +52,39 @@ class AddResidentActivity : BaseActivity() {
 
         binding.saveButton.setOnClickListener {
             saveResident()
+        }
+
+        binding.btnScanId.setOnClickListener {
+            openGallery()
+        }
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        selectImageLauncher.launch(intent)
+    }
+
+    private fun processImage(uri: Uri) {
+        try {
+            val image = InputImage.fromFilePath(this, uri)
+            recognizer.process(image)
+                .addOnSuccessListener { visionText ->
+                    // Logic to extract name and address from OCR text
+                    val fullText = visionText.text
+                    if (fullText.isNotEmpty()) {
+                        // Simple logic: pick the first few lines as name/address
+                        val lines = fullText.split("\n")
+                        if (lines.isNotEmpty()) binding.nameEditText.setText(lines[0])
+                        if (lines.size > 1) binding.addressEditText.setText(lines.subList(1, lines.size).joinToString(" "))
+                        
+                        Toast.makeText(this, "ID Scanned Successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to scan ID: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

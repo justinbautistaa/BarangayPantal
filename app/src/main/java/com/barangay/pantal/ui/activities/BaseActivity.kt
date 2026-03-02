@@ -10,6 +10,7 @@ import com.barangay.pantal.ui.activities.admin.AdminDashboardActivity
 import com.barangay.pantal.ui.activities.admin.AdminRequestsActivity
 import com.barangay.pantal.ui.activities.admin.HouseholdsActivity
 import com.barangay.pantal.ui.activities.admin.ResidentsActivity
+import com.barangay.pantal.ui.activities.admin.StaffManagementActivity
 import com.barangay.pantal.ui.activities.staff.StaffActivityLogActivity
 import com.barangay.pantal.ui.activities.staff.StaffAnnouncementsActivity
 import com.barangay.pantal.ui.activities.staff.StaffDashboardActivity
@@ -19,6 +20,7 @@ import com.barangay.pantal.ui.activities.staff.StaffResidentsActivity
 import com.barangay.pantal.ui.activities.user.AnnouncementsActivity
 import com.barangay.pantal.ui.activities.user.MoreActivity
 import com.barangay.pantal.ui.activities.user.RequestsActivity
+import com.barangay.pantal.ui.activities.user.ServicesActivity
 import com.barangay.pantal.ui.activities.user.UserDashboardActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Locale
@@ -53,39 +55,46 @@ open class BaseActivity : AppCompatActivity() {
 
             val targetActivity = when (item.itemId) {
                 R.id.navigation_dashboard -> when (userRole) {
-                    "admin" -> com.barangay.pantal.ui.activities.admin.AdminDashboardActivity::class.java
-                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffDashboardActivity::class.java
-                    else -> com.barangay.pantal.ui.activities.user.UserDashboardActivity::class.java
+                    "admin" -> AdminDashboardActivity::class.java
+                    "staff" -> StaffDashboardActivity::class.java
+                    else -> UserDashboardActivity::class.java
                 }
                 R.id.navigation_requests -> when (userRole) {
-                    "admin" -> com.barangay.pantal.ui.activities.admin.AdminRequestsActivity::class.java
-                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffRequestsActivity::class.java
-                    else -> com.barangay.pantal.ui.activities.user.RequestsActivity::class.java
+                    "admin" -> AdminRequestsActivity::class.java
+                    "staff" -> StaffRequestsActivity::class.java
+                    else -> RequestsActivity::class.java
                 }
                 R.id.navigation_residents -> when (userRole) {
-                    "admin" -> com.barangay.pantal.ui.activities.admin.ResidentsActivity::class.java
-                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffResidentsActivity::class.java
+                    "admin" -> ResidentsActivity::class.java
+                    "staff" -> StaffResidentsActivity::class.java
                     else -> null
                 }
                 R.id.navigation_households -> when (userRole) {
-                    "admin" -> com.barangay.pantal.ui.activities.admin.HouseholdsActivity::class.java
-                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffHouseholdsActivity::class.java
+                    "admin" -> HouseholdsActivity::class.java
+                    "staff" -> StaffHouseholdsActivity::class.java
                     else -> null
                 }
                 R.id.navigation_announcements -> when (userRole) {
-                    "admin" -> com.barangay.pantal.ui.activities.admin.AdminAnnouncementsActivity::class.java
-                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffAnnouncementsActivity::class.java
-                    else -> com.barangay.pantal.ui.activities.user.AnnouncementsActivity::class.java
+                    "admin" -> AdminAnnouncementsActivity::class.java
+                    "staff" -> StaffAnnouncementsActivity::class.java
+                    else -> AnnouncementsActivity::class.java
                 }
                 R.id.navigation_staff_management -> when (userRole) {
-                    "admin" -> com.barangay.pantal.ui.activities.admin.StaffManagementActivity::class.java
+                    "admin" -> StaffManagementActivity::class.java
+                    else -> null
+                }
+                R.id.navigation_services -> when (userRole) {
+                    "user" -> ServicesActivity::class.java
+                    else -> null
+                }
+                R.id.navigation_more -> when (userRole) {
+                    "user" -> MoreActivity::class.java
                     else -> null
                 }
                 R.id.navigation_activity_log -> when (userRole) {
-                    "staff" -> com.barangay.pantal.ui.activities.staff.StaffActivityLogActivity::class.java
+                    "staff" -> StaffActivityLogActivity::class.java
                     else -> null
                 }
-                R.id.navigation_more -> if (userRole == "user") com.barangay.pantal.ui.activities.user.MoreActivity::class.java else null
                 else -> null
             }
 
