@@ -74,58 +74,21 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/email_layout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Gmail Address"
-                    app:startIconDrawable="@drawable/ic_email"
-                    app:startIconTint="@color/purple_login">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:textColor="@color/black" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_send_otp"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:text="Get OTP"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/otp_layout"
+                android:id="@+id/email_layout"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Enter 6-digit OTP"
-                android:visibility="gone"
-                app:startIconDrawable="@drawable/ic_lock"
+                android:hint="Gmail Address"
+                app:startIconDrawable="@drawable/ic_email"
                 app:startIconTint="@color/purple_login">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/otp_edit_text"
+                    android:id="@+id/email_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="6"
+                    android:inputType="textEmailAddress"
                     android:textColor="@color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>

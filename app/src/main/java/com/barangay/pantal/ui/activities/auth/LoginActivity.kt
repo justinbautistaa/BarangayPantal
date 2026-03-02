@@ -70,12 +70,15 @@ class LoginActivity : BaseActivity() {
                 if (task.isSuccessful) {
                     val firebaseUser = auth.currentUser
                     if (firebaseUser != null) {
+                        Log.d("LoginActivity", "Login successful for UID: ${firebaseUser.uid}")
                         fetchUserRoleAndNavigate(firebaseUser.uid)
                     }
                 } else {
                     binding.progressBar.visibility = View.GONE
                     binding.loginButton.isEnabled = true
-                    Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    val errorMsg = task.exception?.message ?: "Unknown error"
+                    Log.e("LoginActivity", "Auth failed: $errorMsg")
+                    Toast.makeText(this, "Login Failed: $errorMsg", Toast.LENGTH_LONG).show()
                 }
             }
     }
@@ -84,15 +87,22 @@ class LoginActivity : BaseActivity() {
         val database = FirebaseDatabase.getInstance().reference.child("users").child(uid)
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val role = snapshot.child("role").getValue(String::class.java)
                 binding.progressBar.visibility = View.GONE
                 binding.loginButton.isEnabled = true
 
-                if (role != null) {
-                    navigateBasedOnRole(role)
+                if (snapshot.exists()) {
+                    val role = snapshot.child("role").getValue(String::class.java)
+                    Log.d("LoginActivity", "Role found: $role")
+                    
+                    if (role != null) {
+                        navigateBasedOnRole(role)
+                    } else {
+                        Log.e("LoginActivity", "Role field is null in database")
+                        Toast.makeText(this@LoginActivity, "Account role is missing in database.", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Log.e("LoginActivity", "User role not found in database for UID: $uid")
-                    Toast.makeText(this@LoginActivity, "User role not found.", Toast.LENGTH_SHORT).show()
+                    Log.e("LoginActivity", "No user data found at users/$uid")
+                    Toast.makeText(this@LoginActivity, "User profile not found in database.", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -100,13 +110,12 @@ class LoginActivity : BaseActivity() {
                 binding.progressBar.visibility = View.GONE
                 binding.loginButton.isEnabled = true
                 Log.e("LoginActivity", "Database error: ${error.message}")
-                Toast.makeText(this@LoginActivity, "Failed to fetch user role: ${error.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LoginActivity, "Database Error: ${error.message}", Toast.LENGTH_LONG).show()
             }
         })
     }
 
     private fun navigateBasedOnRole(role: String) {
-        binding.progressBar.visibility = View.GONE
         val cleanRole = role.trim().lowercase(Locale.getDefault())
         saveUserRole(cleanRole)
 
