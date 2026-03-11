@@ -1,14 +1,15 @@
 package com.barangay.pantal.ui.activities.admin
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.barangay.pantal.databinding.ActivityAddHouseholdBinding
 import com.barangay.pantal.model.Household
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.barangay.pantal.ui.activities.admin.HouseholdsActivity
-import com.google.firebase.database.FirebaseDatabase
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 class AddHouseholdActivity : BaseActivity() {
 
@@ -19,45 +20,35 @@ class AddHouseholdActivity : BaseActivity() {
         binding = ActivityAddHouseholdBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         binding.saveHouseholdButton.setOnClickListener {
             saveHousehold()
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressedDispatcher.onBackPressed()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun saveHousehold() {
         val householdName = binding.householdNameEditText.text.toString().trim()
+        val householdAddress = binding.householdAddressEditText.text.toString().trim()
 
-        if (householdName.isEmpty()) {
-            Toast.makeText(this, "Please enter a household name", Toast.LENGTH_SHORT).show()
+        if (householdName.isEmpty() || householdAddress.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val database = FirebaseDatabase.getInstance().reference.child("households")
-        val householdId = database.push().key
+        val newHousehold = Household(
+            id = UUID.randomUUID().toString(),
+            name = householdName,
+            address = householdAddress,
+            members = emptyList()
+        )
 
-        if (householdId != null) {
-            val household = Household(householdId, householdName)
-            database.child(householdId).setValue(household).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Toast.makeText(this, "Household added successfully", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    Toast.makeText(this, "Failed to add household", Toast.LENGTH_SHORT).show()
-                }
+        lifecycleScope.launch {
+            try {
+                SupabaseClient.client.postgrest["households"].insert(newHousehold)
+                Toast.makeText(this@AddHouseholdActivity, "Household added successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            } catch (e: Exception) {
+                Toast.makeText(this@AddHouseholdActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            Toast.makeText(this, "Failed to generate a unique ID for the household", Toast.LENGTH_SHORT).show()
         }
     }
 }

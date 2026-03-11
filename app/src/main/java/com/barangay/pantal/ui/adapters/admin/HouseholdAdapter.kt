@@ -2,7 +2,6 @@ package com.barangay.pantal.ui.adapters.admin
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,11 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.barangay.pantal.databinding.ItemHouseholdBinding
 import com.barangay.pantal.model.Household
 import com.barangay.pantal.ui.activities.admin.ViewHouseholdActivity
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
 
-class HouseholdAdapter(options: FirebaseRecyclerOptions<Household>) :
-    FirebaseRecyclerAdapter<Household, HouseholdAdapter.ViewHolder>(options) {
+class HouseholdAdapter(private var households: List<Household>) :
+    RecyclerView.Adapter<HouseholdAdapter.ViewHolder>() {
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
@@ -25,12 +22,18 @@ class HouseholdAdapter(options: FirebaseRecyclerOptions<Household>) :
         return viewHolder
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Household) {
-        holder.bind(model)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(households[position])
+    }
+
+    override fun getItemCount(): Int = households.size
+
+    fun updateData(newHouseholds: List<Household>) {
+        this.households = newHouseholds
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(val binding: ItemHouseholdBinding) : RecyclerView.ViewHolder(binding.root) {
-        private lateinit var household: Household
         private val memberAdapter = HouseholdMemberAdapter(emptyList())
 
         init {
@@ -41,16 +44,13 @@ class HouseholdAdapter(options: FirebaseRecyclerOptions<Household>) :
         }
 
         fun bind(household: Household) {
-            this.household = household
             binding.householdName.text = household.name
             binding.householdAddress.text = household.address
-            binding.totalMembers.text = household.members?.size?.toString() ?: "0"
+            binding.totalMembers.text = household.members.size.toString()
             binding.householdId.text = household.id
 
-            binding.membersRecyclerView.isVisible = !household.members.isNullOrEmpty()
-            if (!household.members.isNullOrEmpty()) {
-                memberAdapter.updateData(household.members)
-            }
+            binding.membersRecyclerView.isVisible = household.members.isNotEmpty()
+            memberAdapter.updateData(household.members)
 
             itemView.setOnClickListener {
                 binding.membersLayout.isVisible = !binding.membersLayout.isVisible

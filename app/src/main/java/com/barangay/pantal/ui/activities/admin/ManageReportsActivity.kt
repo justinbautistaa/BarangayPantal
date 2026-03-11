@@ -1,29 +1,31 @@
 package com.barangay.pantal.ui.activities.admin
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityManageReportsBinding
 import com.barangay.pantal.model.Report
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.barangay.pantal.ui.adapters.ReportsAdminAdapter
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.barangay.pantal.ui.adapters.admin.ReportAdapter
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
-class ManageReportsActivity : AppCompatActivity() {
+class ManageReportsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityManageReportsBinding
-    private lateinit var adapter: ReportsAdminAdapter
+    private lateinit var adapter: ReportAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityManageReportsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = ReportsAdminAdapter()
+        setSupportActionBar(binding.root.findViewById(com.barangay.pantal.R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        adapter = ReportAdapter(emptyList())
         binding.reportsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.reportsRecyclerView.adapter = adapter
 
@@ -31,22 +33,15 @@ class ManageReportsActivity : AppCompatActivity() {
     }
 
     private fun fetchReports() {
-        val database = FirebaseDatabase.getInstance().getReference("reports")
-        database.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val reports = mutableListOf<Report>()
-                for (reportSnapshot in snapshot.children) {
-                    val report = reportSnapshot.getValue(Report::class.java)
-                    if (report != null) {
-                        reports.add(report)
-                    }
-                }
-                adapter.submitList(reports.sortedByDescending { it.timestamp })
+        lifecycleScope.launch {
+            try {
+                val result = SupabaseClient.client.postgrest["reports"]
+                    .select()
+                    .decodeList<Report>()
+                (binding.reportsRecyclerView.adapter as ReportAdapter).updateData(result)
+            } catch (e: Exception) {
+                Toast.makeText(this@ManageReportsActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle error
-            }
-        })
+        }
     }
 }

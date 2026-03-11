@@ -7,29 +7,28 @@ import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.barangay.pantal.databinding.ActivityLoginBinding
+import com.barangay.pantal.model.User
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
 import com.barangay.pantal.ui.activities.admin.AdminDashboardActivity
 import com.barangay.pantal.ui.activities.staff.StaffDashboardActivity
 import com.barangay.pantal.ui.activities.user.UserDashboardActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class LoginActivity : BaseActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        auth = FirebaseAuth.getInstance()
 
         binding.loginButton.setOnClickListener {
             loginUser()
@@ -65,54 +64,61 @@ class LoginActivity : BaseActivity() {
         binding.progressBar.visibility = View.VISIBLE
         binding.loginButton.isEnabled = false
 
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val firebaseUser = auth.currentUser
-                    if (firebaseUser != null) {
-                        Log.d("LoginActivity", "Login successful for UID: ${firebaseUser.uid}")
-                        fetchUserRoleAndNavigate(firebaseUser.uid)
-                    }
-                } else {
-                    binding.progressBar.visibility = View.GONE
-                    binding.loginButton.isEnabled = true
-                    val errorMsg = task.exception?.message ?: "Unknown error"
-                    Log.e("LoginActivity", "Auth failed: $errorMsg")
-                    Toast.makeText(this, "Login Failed: $errorMsg", Toast.LENGTH_LONG).show()
+        lifecycleScope.launch {
+            try {
+                // 1. Sign in with Supabase Auth
+                SupabaseClient.client.auth.signInWith(Email) {
+                    this.email = email
+                    this.password = password
                 }
+
+                // 2. Get user session/id
+                val supabaseUser = SupabaseClient.client.auth.retrieveUserForCurrentSession()
+                val userId = supabaseUser.id
+
+                Log.d("LoginActivity", "Login successful for UID: $userId")
+                fetchUserRoleAndNavigate(userId)
+
+            } catch (e: Exception) {
+                binding.progressBar.visibility = View.GONE
+                binding.loginButton.isEnabled = true
+                val errorMsg = e.localizedMessage ?: "Unknown error"
+                Log.e("LoginActivity", "Auth failed: $errorMsg")
+                Toast.makeText(this@LoginActivity, "Login Failed: $errorMsg", Toast.LENGTH_LONG).show()
             }
+        }
     }
 
     private fun fetchUserRoleAndNavigate(uid: String) {
-        val database = FirebaseDatabase.getInstance().reference.child("users").child(uid)
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        lifecycleScope.launch {
+            try {
+                // Fetch user from 'users' table
+                val user = SupabaseClient.client.postgrest["users"]
+                    .select {
+                        filter {
+                            eq("id", uid)
+                        }
+                    }
+                    .decodeSingleOrNull<User>()
+
                 binding.progressBar.visibility = View.GONE
                 binding.loginButton.isEnabled = true
 
-                if (snapshot.exists()) {
-                    val role = snapshot.child("role").getValue(String::class.java)
-                    Log.d("LoginActivity", "Role found: $role")
-                    
-                    if (role != null) {
-                        navigateBasedOnRole(role)
-                    } else {
-                        Log.e("LoginActivity", "Role field is null in database")
-                        Toast.makeText(this@LoginActivity, "Account role is missing in database.", Toast.LENGTH_SHORT).show()
-                    }
+                if (user != null) {
+                    Log.d("LoginActivity", "Role found: ${user.role}")
+                    navigateBasedOnRole(user.role)
                 } else {
-                    Log.e("LoginActivity", "No user data found at users/$uid")
+                    Log.e("LoginActivity", "No user data found at users table for id: $uid")
                     Toast.makeText(this@LoginActivity, "User profile not found in database.", Toast.LENGTH_SHORT).show()
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
+            } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
                 binding.loginButton.isEnabled = true
-                Log.e("LoginActivity", "Database error: ${error.message}")
-                Toast.makeText(this@LoginActivity, "Database Error: ${error.message}", Toast.LENGTH_LONG).show()
+                Log.e("LoginActivity", "Database error: ${e.message}")
+                Toast.makeText(this@LoginActivity, "Database Error: ${e.message}", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
     private fun navigateBasedOnRole(role: String) {

@@ -3,36 +3,34 @@ package com.barangay.pantal.ui.adapters.staff
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.barangay.pantal.R
-import com.barangay.pantal.databinding.ItemStaffAnnouncementBinding
+import com.barangay.pantal.databinding.ItemAnnouncementBinding
 import com.barangay.pantal.model.Announcement
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
 
-class StaffAnnouncementAdapter(options: FirebaseRecyclerOptions<Announcement>) : FirebaseRecyclerAdapter<Announcement, StaffAnnouncementAdapter.AnnouncementViewHolder>(options) {
+class StaffAnnouncementAdapter(private var announcements: List<Announcement>) :
+    RecyclerView.Adapter<StaffAnnouncementAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnnouncementViewHolder {
-        val binding = ItemStaffAnnouncementBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AnnouncementViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemAnnouncementBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: AnnouncementViewHolder, position: Int, model: Announcement) {
-        holder.bind(model)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(announcements[position])
     }
 
-    inner class AnnouncementViewHolder(private val binding: ItemStaffAnnouncementBinding) : RecyclerView.ViewHolder(binding.root) {
+    override fun getItemCount(): Int = announcements.size
+
+    fun updateData(newAnnouncements: List<Announcement>) {
+        this.announcements = newAnnouncements
+        notifyDataSetChanged()
+    }
+
+    inner class ViewHolder(private val binding: ItemAnnouncementBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(announcement: Announcement) {
-            binding.announcementTitle.text = announcement.title
-            binding.announcementContent.text = announcement.content
-            binding.announcementDate.text = announcement.date
-            binding.priorityText.text = announcement.priority
-
-            val priorityColor = when (announcement.priority) {
-                "high" -> R.drawable.status_high
-                "medium" -> R.drawable.status_medium
-                else -> R.drawable.status_low
-            }
-            binding.priorityLayout.setBackgroundResource(priorityColor)
+            binding.tvTitle.text = announcement.title
+            binding.tvDate.text = announcement.date
+            binding.tvContent.text = announcement.content
+            // Admin buttons are hidden by default in the XML for non-admins
         }
     }
 }

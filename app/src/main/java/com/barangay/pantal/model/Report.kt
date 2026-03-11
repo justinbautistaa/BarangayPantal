@@ -1,11 +1,12 @@
 package com.barangay.pantal.model
 
+import kotlinx.serialization.Serializable
+import java.util.UUID
+
+@Serializable
 data class Report(
-    val title: String = "",
-    val description: String = "",
-    val date: String = "",
-    val reporterId: String = "",
-    val details: String = "",
-    val priority: String = "",
-    val timestamp: Long = 0
+    val id: String = UUID.randomUUID().toString(),
+    val reporterId: String,
+    val details: String,
+    val timestamp: Long
 )

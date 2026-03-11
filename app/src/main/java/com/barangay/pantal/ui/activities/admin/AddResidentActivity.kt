@@ -7,16 +7,17 @@ import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import com.barangay.pantal.databinding.ActivityAddResidentBinding
 import com.barangay.pantal.model.Resident
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 class AddResidentActivity : BaseActivity() {
 
@@ -69,10 +70,8 @@ class AddResidentActivity : BaseActivity() {
             val image = InputImage.fromFilePath(this, uri)
             recognizer.process(image)
                 .addOnSuccessListener { visionText ->
-                    // Logic to extract name and address from OCR text
                     val fullText = visionText.text
                     if (fullText.isNotEmpty()) {
-                        // Simple logic: pick the first few lines as name/address
                         val lines = fullText.split("\n")
                         if (lines.isNotEmpty()) binding.nameEditText.setText(lines[0])
                         if (lines.size > 1) binding.addressEditText.setText(lines.subList(1, lines.size).joinToString(" "))
@@ -97,10 +96,16 @@ class AddResidentActivity : BaseActivity() {
     }
 
     private fun loadResidentData() {
-        val query = FirebaseDatabase.getInstance().reference.child("residents").child(residentId!!)
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val resident = snapshot.getValue(Resident::class.java)
+        lifecycleScope.launch {
+            try {
+                val resident = SupabaseClient.client.postgrest["residents"]
+                    .select {
+                        filter {
+                            eq("id", residentId!!)
+                        }
+                    }
+                    .decodeSingleOrNull<Resident>()
+
                 if (resident != null) {
                     binding.nameEditText.setText(resident.name)
                     binding.ageEditText.setText(resident.age.toString())
@@ -111,12 +116,10 @@ class AddResidentActivity : BaseActivity() {
                     binding.seniorSwitch.isChecked = resident.isSenior
                     binding.pwdSwitch.isChecked = resident.isPwd
                 }
+            } catch (e: Exception) {
+                Toast.makeText(this@AddResidentActivity, "Error loading data", Toast.LENGTH_SHORT).show()
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle error
-            }
-        })
+        }
     }
 
     private fun saveResident() {
@@ -134,16 +137,25 @@ class AddResidentActivity : BaseActivity() {
             return
         }
 
-        val database = FirebaseDatabase.getInstance().reference.child("residents")
-        val currentResidentId = residentId ?: database.push().key!!
-
-        val resident = Resident(currentResidentId, name, age, gender, address, occupation, isVoter, isSenior, isPwd)
-        database.child(currentResidentId).setValue(resident).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Toast.makeText(this, "Resident saved successfully", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            try {
+                val currentResidentId = residentId ?: UUID.randomUUID().toString()
+                val resident = Resident(currentResidentId, name, age, gender, address, occupation, isVoter, isSenior, isPwd)
+                
+                if (residentId == null) {
+                    SupabaseClient.client.postgrest["residents"].insert(resident)
+                } else {
+                    SupabaseClient.client.postgrest["residents"].update(resident) {
+                        filter {
+                            eq("id", residentId!!)
+                        }
+                    }
+                }
+                
+                Toast.makeText(this@AddResidentActivity, "Resident saved successfully", Toast.LENGTH_SHORT).show()
                 finish()
-            } else {
-                Toast.makeText(this, "Failed to save resident", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(this@AddResidentActivity, "Failed to save resident: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,14 +1,18 @@
 package com.barangay.pantal.ui.activities.staff
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityStaffHouseholdsBinding
 import com.barangay.pantal.model.Household
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
 import com.barangay.pantal.ui.adapters.staff.StaffHouseholdAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.database.FirebaseDatabase
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class StaffHouseholdsActivity : BaseActivity() {
 
@@ -21,26 +25,29 @@ class StaffHouseholdsActivity : BaseActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        val query = FirebaseDatabase.getInstance().getReference("households").orderByChild("name")
-        val options = FirebaseRecyclerOptions.Builder<Household>()
-            .setQuery(query, Household::class.java)
-            .build()
-
-        adapter = StaffHouseholdAdapter(options)
-        binding.householdsRecyclerView.layoutManager = GridLayoutManager(this, 2)
+        adapter = StaffHouseholdAdapter(emptyList())
+        binding.householdsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.householdsRecyclerView.adapter = adapter
 
+        binding.addHouseholdButton.setOnClickListener {
+            startActivity(Intent(this, StaffAddHouseholdActivity::class.java))
+        }
+
         setupBottomNavigation(binding.bottomNavigation, R.id.navigation_households)
+
+        fetchHouseholds()
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
+    private fun fetchHouseholds() {
+        lifecycleScope.launch {
+            try {
+                val result = SupabaseClient.client.postgrest["households"].select().decodeList<Household>()
+                adapter.updateData(result)
+            } catch (e: Exception) {
+                Toast.makeText(this@StaffHouseholdsActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

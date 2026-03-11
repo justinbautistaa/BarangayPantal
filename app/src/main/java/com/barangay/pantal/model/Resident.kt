@@ -1,5 +1,8 @@
 package com.barangay.pantal.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Resident(
     val id: String = "",
     val name: String = "",

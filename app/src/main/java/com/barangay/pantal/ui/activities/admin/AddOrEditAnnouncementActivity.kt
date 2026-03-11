@@ -1,22 +1,22 @@
 package com.barangay.pantal.ui.activities.admin
 
 import android.os.Bundle
-import android.view.MenuItem
-import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.barangay.pantal.databinding.ActivityAddOrEditAnnouncementBinding
 import com.barangay.pantal.model.Announcement
-import com.barangay.pantal.model.Priority
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 
 class AddOrEditAnnouncementActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAddOrEditAnnouncementBinding
-    private val database = FirebaseDatabase.getInstance().reference
     private var announcementId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,23 +24,10 @@ class AddOrEditAnnouncementActivity : BaseActivity() {
         binding = ActivityAddOrEditAnnouncementBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        val priorities = listOf(Priority.Low.toString(), Priority.Medium.toString(), Priority.High.toString())
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, priorities)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerPriority.adapter = adapter
-
         announcementId = intent.getStringExtra("announcement_id")
 
         if (announcementId != null) {
             loadAnnouncementData()
-            binding.postAnnouncementButton.text = "Update Announcement"
-            supportActionBar?.title = "Edit Announcement"
-        } else {
-            binding.postAnnouncementButton.text = "Add Announcement"
-            supportActionBar?.title = "New Announcement"
         }
 
         binding.postAnnouncementButton.setOnClickListener {
@@ -48,60 +35,62 @@ class AddOrEditAnnouncementActivity : BaseActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressedDispatcher.onBackPressed()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun loadAnnouncementData() {
-        val announcementRef = database.child("announcements").child(announcementId!!)
-        announcementRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val announcement = snapshot.getValue(Announcement::class.java)
-                if (announcement != null) {
-                    binding.announcementTitleEditText.setText(announcement.title)
-                    binding.announcementContentEditText.setText(announcement.content)
-                    val priorityIndex = (binding.spinnerPriority.adapter as ArrayAdapter<String>).getPosition(announcement.priority)
-                    binding.spinnerPriority.setSelection(priorityIndex)
-                }
-            }
+        lifecycleScope.launch {
+            try {
+                val announcement = SupabaseClient.client.postgrest["announcements"].select {
+                    filter {
+                        eq("id", announcementId!!)
+                    }
+                }.decodeSingleOrNull<Announcement>()
 
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@AddOrEditAnnouncementActivity, "Failed to load announcement.", Toast.LENGTH_SHORT).show()
+                announcement?.let {
+                    binding.announcementTitleEditText.setText(it.title)
+                    binding.announcementContentEditText.setText(it.content)
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@AddOrEditAnnouncementActivity, "Error loading: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 
     private fun saveAnnouncement() {
         val title = binding.announcementTitleEditText.text.toString().trim()
         val content = binding.announcementContentEditText.text.toString().trim()
-        val priority = binding.spinnerPriority.selectedItem.toString()
-        val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
-        val timestamp = System.currentTimeMillis()
 
         if (title.isEmpty() || content.isEmpty()) {
-            Toast.makeText(this, "Please fill out all fields.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val announcement = Announcement(announcementId ?: "", title, date, content, priority, timestamp)
-
-        val announcementRef = if (announcementId != null) {
-            database.child("announcements").child(announcementId!!)
-        } else {
-            database.child("announcements").push()
-        }
-
-        announcementRef.setValue(announcement)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Announcement saved successfully.", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            try {
+                if (announcementId == null) {
+                    val newAnnouncement = Announcement(
+                        id = UUID.randomUUID().toString(),
+                        title = title,
+                        content = content,
+                        priority = "Normal",
+                        date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()),
+                        timestamp = System.currentTimeMillis()
+                    )
+                    SupabaseClient.client.postgrest["announcements"].insert(newAnnouncement)
+                    Toast.makeText(this@AddOrEditAnnouncementActivity, "Announcement Added", Toast.LENGTH_SHORT).show()
+                } else {
+                    SupabaseClient.client.postgrest["announcements"].update({
+                        set("title", title)
+                        set("content", content)
+                    }) {
+                        filter {
+                            eq("id", announcementId!!)
+                        }
+                    }
+                    Toast.makeText(this@AddOrEditAnnouncementActivity, "Announcement Updated", Toast.LENGTH_SHORT).show()
+                }
                 finish()
+            } catch (e: Exception) {
+                Toast.makeText(this@AddOrEditAnnouncementActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed to save announcement.", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
 }

@@ -6,9 +6,11 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityUserDashboardBinding
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.network.WeatherService
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.google.firebase.auth.FirebaseAuth
+import com.barangay.pantal.ui.activities.auth.LoginActivity
+import io.github.jan.supabase.gotrue.auth
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,7 +18,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class UserDashboardActivity : BaseActivity() {
 
     private lateinit var binding: ActivityUserDashboardBinding
-    private lateinit var auth: FirebaseAuth
 
     private val weatherService: WeatherService by lazy {
         Retrofit.Builder()
@@ -31,8 +32,6 @@ class UserDashboardActivity : BaseActivity() {
         binding = ActivityUserDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = FirebaseAuth.getInstance()
-
         binding.cardViewAllNews.setOnClickListener {
             startActivity(Intent(this, AnnouncementsActivity::class.java))
         }
@@ -42,11 +41,13 @@ class UserDashboardActivity : BaseActivity() {
         }
 
         binding.logoutButton.setOnClickListener {
-            auth.signOut()
-            val intent = Intent(this, com.barangay.pantal.ui.activities.auth.LoginActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-            finish()
+            lifecycleScope.launch {
+                SupabaseClient.client.auth.signOut()
+                val intent = Intent(this@UserDashboardActivity, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+                finish()
+            }
         }
 
         setupBottomNavigation(binding.bottomNavigation, R.id.navigation_dashboard)

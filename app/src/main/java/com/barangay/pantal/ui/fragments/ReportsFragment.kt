@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.barangay.pantal.databinding.FragmentReportsBinding
 import com.barangay.pantal.model.Report
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.barangay.pantal.network.SupabaseClient
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class ReportsFragment : Fragment() {
 
@@ -34,28 +37,25 @@ class ReportsFragment : Fragment() {
     }
 
     private fun submitReport() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
-            val userId = currentUser.uid
+        val user = SupabaseClient.client.auth.currentSessionOrNull()?.user
+        if (user != null) {
+            val userId = user.id
             val details = binding.reportDetailsEditText.text.toString().trim()
 
             if (details.isNotEmpty()) {
-                val database = FirebaseDatabase.getInstance().getReference("reports")
-                val reportId = database.push().key
-                if (reportId != null) {
-                    val report = Report(
-                        reporterId = userId,
-                        details = details,
-                        timestamp = System.currentTimeMillis()
-                    )
-                    database.child(reportId).setValue(report)
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "Report submitted successfully", Toast.LENGTH_SHORT).show()
-                            binding.reportDetailsEditText.text.clear()
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(context, "Failed to submit report", Toast.LENGTH_SHORT).show()
-                        }
+                lifecycleScope.launch {
+                    try {
+                        val report = Report(
+                            reporterId = userId,
+                            details = details,
+                            timestamp = System.currentTimeMillis()
+                        )
+                        SupabaseClient.client.postgrest["reports"].insert(report)
+                        Toast.makeText(context, "Report submitted successfully", Toast.LENGTH_SHORT).show()
+                        binding.reportDetailsEditText.text.clear()
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Failed to submit report: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } else {
                 Toast.makeText(context, "Please enter the report details", Toast.LENGTH_SHORT).show()

@@ -5,23 +5,24 @@ import android.os.Bundle
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.barangay.pantal.databinding.ActivitySignupBinding
 import com.barangay.pantal.model.User
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class SignupActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySignupBinding
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        auth = FirebaseAuth.getInstance()
 
         binding.signupButton.setOnClickListener {
             signupUser()
@@ -66,44 +67,29 @@ class SignupActivity : BaseActivity() {
         binding.progressBar.visibility = View.VISIBLE
         binding.signupButton.isEnabled = false
 
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val firebaseUser = auth.currentUser
-                    if (firebaseUser != null) {
-                        firebaseUser.sendEmailVerification()
-                            .addOnCompleteListener { verificationTask ->
-                                if (verificationTask.isSuccessful) {
-                                    saveUserToDatabase(firebaseUser.uid, fullName, email)
-                                } else {
-                                    Toast.makeText(this, "Failed to send verification email: ${verificationTask.exception?.message}", Toast.LENGTH_LONG).show()
-                                    binding.progressBar.visibility = View.GONE
-                                    binding.signupButton.isEnabled = true
-                                }
-                            }
-                    }
-                } else {
-                    binding.progressBar.visibility = View.GONE
-                    binding.signupButton.isEnabled = true
-                    Toast.makeText(this, "Signup failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+        lifecycleScope.launch {
+            try {
+                // 1. Create account in Supabase Auth
+                val signupResult = SupabaseClient.client.auth.signUpWith(Email) {
+                    this.email = email
+                    this.password = password
                 }
-            }
-    }
 
-    private fun saveUserToDatabase(uid: String, fullName: String, email: String) {
-        val database = FirebaseDatabase.getInstance().reference.child("users").child(uid)
-        val user = User(fullName, email, "user") // Default role is user
+                // 2. Save profile to 'users' table
+                signupResult?.let { user ->
+                    val userProfile = User(id = user.id, fullName = fullName, email = email, role = "user")
+                    SupabaseClient.client.postgrest["users"].insert(userProfile)
+                }
 
-        database.setValue(user).addOnCompleteListener {
-            binding.progressBar.visibility = View.GONE
-            if (it.isSuccessful) {
-                Toast.makeText(this, "Signup successful! Please check your Gmail for verification.", Toast.LENGTH_LONG).show()
-                auth.signOut() // Sign out until email is verified
-                startActivity(Intent(this, LoginActivity::class.java))
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this@SignupActivity, "Signup successful! Check your Gmail for verification.", Toast.LENGTH_LONG).show()
+                startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
                 finish()
-            } else {
+
+            } catch (e: Exception) {
+                binding.progressBar.visibility = View.GONE
                 binding.signupButton.isEnabled = true
-                Toast.makeText(this, "Failed to save user data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SignupActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
             }
         }
     }

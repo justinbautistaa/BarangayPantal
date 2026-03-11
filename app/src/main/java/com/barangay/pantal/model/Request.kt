@@ -1,5 +1,8 @@
 package com.barangay.pantal.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Request(
     val id: String = "",
     val userId: String = "",
@@ -7,6 +10,6 @@ data class Request(
     val type: String = "",
     val date: String = "",
     val purpose: String? = null,
-    val status: String = "",
+    val status: String = "Pending",
     val timestamp: Long? = null
 )

@@ -1,91 +1,68 @@
 package com.barangay.pantal.ui.activities.staff
 
 import android.os.Bundle
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityStaffRequestsBinding
-import com.barangay.pantal.model.Request
+import com.barangay.pantal.model.RequestAdmin
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.barangay.pantal.ui.adapters.common.RequestAdapter
-import com.google.android.material.chip.Chip
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.barangay.pantal.ui.adapters.RequestsAdminAdapter
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
-class StaffRequestsActivity : BaseActivity(), RequestAdapter.OnRequestInteractionListener {
+class StaffRequestsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityStaffRequestsBinding
-    private lateinit var adapter: RequestAdapter
-    private val requests = mutableListOf<Request>()
+    private lateinit var adapter: RequestsAdminAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStaffRequestsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = RequestAdapter(this, mutableListOf(), this, true)
-        binding.rvRequests.layoutManager = LinearLayoutManager(this)
-        binding.rvRequests.adapter = adapter
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        binding.requestFilterChipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val chip = group.findViewById<Chip>(checkedId)
-            if(chip != null) {
-                filterRequests(chip.text.toString())
-            } else {
-                filterRequests("All")
-            }
-        }
-
-        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_requests)
+        adapter = RequestsAdminAdapter(
+            onApproveClick = { request -> updateRequestStatus(request, "Approved") },
+            onRejectClick = { request -> updateRequestStatus(request, "Rejected") }
+        )
+        binding.requestsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.requestsRecyclerView.adapter = adapter
 
         fetchRequests()
     }
 
     private fun fetchRequests() {
-        val database = FirebaseDatabase.getInstance().getReference("requests")
-        database.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                requests.clear()
-                for (requestSnapshot in snapshot.children) {
-                    val request = requestSnapshot.getValue(Request::class.java)
-                    if (request != null) {
-                        requests.add(request)
+        lifecycleScope.launch {
+            try {
+                val result = SupabaseClient.client.postgrest["requests"]
+                    .select()
+                    .decodeList<RequestAdmin>()
+                adapter.submitList(result.sortedByDescending { it.timestamp })
+            } catch (e: Exception) {
+                Toast.makeText(this@StaffRequestsActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateRequestStatus(request: RequestAdmin, status: String) {
+        lifecycleScope.launch {
+            try {
+                SupabaseClient.client.postgrest["requests"].update({
+                    set("status", status)
+                }) {
+                    filter {
+                        eq("key", request.key)
                     }
                 }
-                binding.chipAll.isChecked = true
-                filterRequests("All")
+                Toast.makeText(this@StaffRequestsActivity, "Status updated", Toast.LENGTH_SHORT).show()
+                fetchRequests()
+            } catch (e: Exception) {
+                Toast.makeText(this@StaffRequestsActivity, "Failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle error
-            }
-        })
-    }
-
-    private fun filterRequests(status: String) {
-        val filteredList = if (status.equals("All", ignoreCase = true)) {
-            requests
-        } else {
-            requests.filter { it.status.equals(status, ignoreCase = true) }
         }
-        adapter.updateList(filteredList)
-    }
-
-    override fun onViewRequest(request: Request) {
-        // Handle view request
-    }
-
-    override fun onApproveRequest(request: Request) {
-        updateRequestStatus(request, "Approved")
-    }
-
-    override fun onRejectRequest(request: Request) {
-        updateRequestStatus(request, "Rejected")
-    }
-
-    private fun updateRequestStatus(request: Request, status: String) {
-        val database = FirebaseDatabase.getInstance().getReference("requests")
-        database.child(request.id).child("status").setValue(status)
     }
 }

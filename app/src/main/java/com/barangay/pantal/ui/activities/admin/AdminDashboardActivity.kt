@@ -4,32 +4,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityAdminDashboardBinding
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.barangay.pantal.ui.activities.admin.HouseholdsActivity
-import com.barangay.pantal.ui.activities.admin.ReportsActivity
 import com.barangay.pantal.ui.activities.auth.LoginActivity
 import com.barangay.pantal.ui.activities.user.ServicesActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class AdminDashboardActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAdminDashboardBinding
-    private lateinit var auth: FirebaseAuth
-    private val database = FirebaseDatabase.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = FirebaseAuth.getInstance()
-        if (auth.currentUser == null) {
+        val user = SupabaseClient.client.auth.currentSessionOrNull()?.user
+        if (user == null) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
             return
@@ -59,49 +56,30 @@ class AdminDashboardActivity : BaseActivity() {
     }
 
     private fun setupDashboardCounts() {
-        // Get Total Residents
-//        database.getReference("residents").addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                binding.tvTotalResidents.text = snapshot.childrenCount.toString()
-//
-//                // Get Senior Citizens
-//                var seniorCount = 0
-//                for (residentSnapshot in snapshot.children) {
-//                    val age = residentSnapshot.child("age").getValue(Long::class.java)?.toInt() ?: 0
-//                    if (age >= 60) {
-//                        seniorCount++
-//                    }
-//                }
-//                binding.tvSeniorCitizens.text = seniorCount.toString()
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // Handle error
-//            }
-//        })
-//
-//        // Get Total Households
-//        database.getReference("households").addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                binding.tvTotalHouseholds.text = snapshot.childrenCount.toString()
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // Handle error
-//            }
-//        })
-//
-//        // Get Pending Requests
-//        database.getReference("requests").orderByChild("status").equalTo("Pending")
-//            .addValueEventListener(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    binding.tvPendingRequests.text = snapshot.childrenCount.toString()
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//                    // Handle error
-//                }
-//            })
+        lifecycleScope.launch {
+            try {
+                // Get Total Residents
+                val residents = SupabaseClient.client.postgrest["residents"]
+                    .select()
+                    .decodeList<com.barangay.pantal.model.Resident>()
+                binding.tvTotalResidents.text = residents.size.toString()
+
+                // Get Senior Citizens (Age >= 60)
+                val seniorCount = residents.count { it.age >= 60 }
+                binding.tvSeniorCitizens.text = seniorCount.toString()
+
+                // Get Total Households
+                val households = SupabaseClient.client.postgrest["households"]
+                    .select()
+                    .decodeList<com.barangay.pantal.model.Household>()
+                binding.tvTotalHouseholds.text = households.size.toString()
+
+                // Note: Add logic for Pending Requests if you have a requests table
+                
+            } catch (e: Exception) {
+                // Handle error silenty or with a toast
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -128,10 +106,12 @@ class AdminDashboardActivity : BaseActivity() {
     }
 
     private fun logout() {
-        auth.signOut()
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-        finish()
+        lifecycleScope.launch {
+            SupabaseClient.client.auth.signOut()
+            val intent = Intent(this@AdminDashboardActivity, LoginActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            finish()
+        }
     }
 }

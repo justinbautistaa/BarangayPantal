@@ -2,16 +2,16 @@ package com.barangay.pantal.ui.activities.admin
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityManageAnnouncementsBinding
 import com.barangay.pantal.model.Announcement
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.barangay.pantal.ui.activities.admin.AddAnnouncementActivity
 import com.barangay.pantal.ui.adapters.common.AnnouncementsAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.database.FirebaseDatabase
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class ManageAnnouncementsActivity : BaseActivity() {
 
@@ -26,37 +26,46 @@ class ManageAnnouncementsActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val query = FirebaseDatabase.getInstance().getReference("announcements")
-        val options = FirebaseRecyclerOptions.Builder<Announcement>()
-            .setQuery(query, Announcement::class.java)
-            .build()
-
-        adapter = AnnouncementsAdapter(true, options)
+        adapter = AnnouncementsAdapter(true, emptyList()) { announcement ->
+            deleteAnnouncement(announcement)
+        }
+        
         binding.announcementsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.announcementsRecyclerView.adapter = adapter
 
         binding.newAnnouncementButton.setOnClickListener {
-            startActivity(Intent(this, AddAnnouncementActivity::class.java))
+            startActivity(Intent(this, AddOrEditAnnouncementActivity::class.java))
         }
 
-        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_announcements)
+        fetchAnnouncements()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressedDispatcher.onBackPressed()
-            return true
+    private fun fetchAnnouncements() {
+        lifecycleScope.launch {
+            try {
+                val result = SupabaseClient.client.postgrest["announcements"]
+                    .select()
+                    .decodeList<Announcement>()
+                adapter.updateData(result.sortedByDescending { it.timestamp })
+            } catch (e: Exception) {
+                Toast.makeText(this@ManageAnnouncementsActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
         }
-        return super.onOptionsItemSelected(item)
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
+    private fun deleteAnnouncement(announcement: Announcement) {
+        lifecycleScope.launch {
+            try {
+                SupabaseClient.client.postgrest["announcements"].delete {
+                    filter {
+                        eq("id", announcement.id)
+                    }
+                }
+                Toast.makeText(this@ManageAnnouncementsActivity, "Deleted", Toast.LENGTH_SHORT).show()
+                fetchAnnouncements()
+            } catch (e: Exception) {
+                Toast.makeText(this@ManageAnnouncementsActivity, "Failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

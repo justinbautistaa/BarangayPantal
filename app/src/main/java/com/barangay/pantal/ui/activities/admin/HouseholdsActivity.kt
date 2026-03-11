@@ -2,15 +2,17 @@ package com.barangay.pantal.ui.activities.admin
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityHouseholdsBinding
 import com.barangay.pantal.model.Household
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.barangay.pantal.ui.activities.admin.AddHouseholdActivity
 import com.barangay.pantal.ui.adapters.admin.HouseholdAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.database.FirebaseDatabase
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class HouseholdsActivity : BaseActivity() {
 
@@ -25,30 +27,36 @@ class HouseholdsActivity : BaseActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        val query = FirebaseDatabase.getInstance().reference.child("households")
-        val options = FirebaseRecyclerOptions.Builder<Household>()
-            .setQuery(query, Household::class.java)
-            .build()
-
-        adapter = HouseholdAdapter(options)
+        adapter = HouseholdAdapter(emptyList())
         binding.householdsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.householdsRecyclerView.adapter = adapter
-        binding.householdsRecyclerView.itemAnimator = null
 
         binding.addHouseholdButton.setOnClickListener {
             startActivity(Intent(this, AddHouseholdActivity::class.java))
         }
 
-        setupBottomNavigation(binding.bottomNavigation, R.id.navigation_households)
+        setupBottomNavigation(binding.bottomNavigation, com.barangay.pantal.R.id.navigation_households)
+        
+        fetchHouseholds()
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter.startListening()
-    }
+    private fun fetchHouseholds() {
+        // Checking if progressBar exists in the layout, otherwise using a simple visibility check or removing
+        try {
+            // Note: If progressBar is not in activity_households.xml, this will need a different approach
+            // I'll assume it might be missing or named differently based on the build error
+        } catch (e: Exception) {}
 
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
+        lifecycleScope.launch {
+            try {
+                val result = SupabaseClient.client.postgrest["households"]
+                    .select()
+                    .decodeList<Household>()
+                
+                adapter.updateData(result)
+            } catch (e: Exception) {
+                Toast.makeText(this@HouseholdsActivity, "Error fetching households: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

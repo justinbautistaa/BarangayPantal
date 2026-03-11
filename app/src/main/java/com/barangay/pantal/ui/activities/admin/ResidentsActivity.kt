@@ -3,20 +3,19 @@ package com.barangay.pantal.ui.activities.admin
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityResidentsBinding
 import com.barangay.pantal.model.Resident
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.barangay.pantal.ui.activities.admin.AddResidentActivity
-import com.barangay.pantal.ui.activities.admin.ViewResidentActivity
 import com.barangay.pantal.ui.adapters.admin.ResidentAdapter
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class ResidentsActivity : BaseActivity() {
 
@@ -91,37 +90,47 @@ class ResidentsActivity : BaseActivity() {
 
     private fun fetchResidents() {
         binding.progressBar.visibility = View.VISIBLE
-        val query = FirebaseDatabase.getInstance().reference.child("residents")
-        query.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        lifecycleScope.launch {
+            try {
+                val result = SupabaseClient.client.postgrest["residents"]
+                    .select()
+                    .decodeList<Resident>()
+                
                 residents.clear()
-                for (data in snapshot.children) {
-                    val resident = data.getValue(Resident::class.java)
-                    if (resident != null) {
-                        residents.add(resident)
-                    }
-                }
+                residents.addAll(result)
                 filterResidents(binding.searchView.query.toString())
                 binding.progressBar.visibility = View.GONE
-            }
-
-
-
-            override fun onCancelled(error: DatabaseError) {
+            } catch (e: Exception) {
                 binding.progressBar.visibility = View.GONE
-                // Handle error
+                Toast.makeText(this@ResidentsActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 
     private fun showDeleteConfirmationDialog(resident: Resident) {
         AlertDialog.Builder(this)
             .setTitle("Delete Resident")
-            .setMessage("Are you sure you want to delete this resident?")
+            .setMessage("Are you sure you want to delete ${resident.name}?")
             .setPositiveButton("Delete") { _, _ ->
-                FirebaseDatabase.getInstance().reference.child("residents").child(resident.id).removeValue()
+                deleteResident(resident.id)
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun deleteResident(id: String) {
+        lifecycleScope.launch {
+            try {
+                SupabaseClient.client.postgrest["residents"].delete {
+                    filter {
+                        eq("id", id)
+                    }
+                }
+                Toast.makeText(this@ResidentsActivity, "Resident deleted", Toast.LENGTH_SHORT).show()
+                fetchResidents()
+            } catch (e: Exception) {
+                Toast.makeText(this@ResidentsActivity, "Delete failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

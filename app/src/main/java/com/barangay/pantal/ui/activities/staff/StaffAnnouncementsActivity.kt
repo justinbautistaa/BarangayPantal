@@ -2,20 +2,22 @@ package com.barangay.pantal.ui.activities.staff
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityStaffAnnouncementsBinding
 import com.barangay.pantal.model.Announcement
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
-import com.barangay.pantal.ui.activities.admin.AddAnnouncementActivity
-import com.barangay.pantal.ui.adapters.staff.StaffAnnouncementAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.database.FirebaseDatabase
+import com.barangay.pantal.ui.adapters.common.AnnouncementsAdapter
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class StaffAnnouncementsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityStaffAnnouncementsBinding
-    private lateinit var adapter: StaffAnnouncementAdapter
+    private lateinit var adapter: AnnouncementsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,30 +25,34 @@ class StaffAnnouncementsActivity : BaseActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        val query = FirebaseDatabase.getInstance().getReference("announcements").orderByChild("timestamp")
-        val options = FirebaseRecyclerOptions.Builder<Announcement>()
-            .setQuery(query, Announcement::class.java)
-            .build()
-
-        adapter = StaffAnnouncementAdapter(options)
-        binding.announcementsRecyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = AnnouncementsAdapter(false, emptyList()) { /* No delete for staff */ }
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.reverseLayout = true
+        layoutManager.stackFromEnd = true
+        binding.announcementsRecyclerView.layoutManager = layoutManager
         binding.announcementsRecyclerView.adapter = adapter
 
         binding.newAnnouncementButton.setOnClickListener {
-            startActivity(Intent(this, AddAnnouncementActivity::class.java))
+            startActivity(Intent(this, StaffAddAnnouncementActivity::class.java))
         }
 
         setupBottomNavigation(binding.bottomNavigation, R.id.navigation_announcements)
+
+        fetchAnnouncements()
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        adapter.stopListening()
+    private fun fetchAnnouncements() {
+        lifecycleScope.launch {
+            try {
+                val result = SupabaseClient.client.postgrest["announcements"]
+                    .select()
+                    .decodeList<Announcement>()
+                adapter.updateData(result.sortedByDescending { it.timestamp })
+            } catch (e: Exception) {
+                Toast.makeText(this@StaffAnnouncementsActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

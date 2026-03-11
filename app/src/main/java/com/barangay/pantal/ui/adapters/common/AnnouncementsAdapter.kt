@@ -14,11 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.barangay.pantal.R
 import com.barangay.pantal.model.Announcement
 import com.barangay.pantal.ui.activities.admin.AddOrEditAnnouncementActivity
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
 
-class AnnouncementsAdapter(private val isAdmin: Boolean, options: FirebaseRecyclerOptions<Announcement>) :
-    FirebaseRecyclerAdapter<Announcement, AnnouncementsAdapter.AnnouncementViewHolder>(options) {
+class AnnouncementsAdapter(
+    private val isAdmin: Boolean,
+    private var announcements: List<Announcement>,
+    private val onDeleteClick: (Announcement) -> Unit
+) : RecyclerView.Adapter<AnnouncementsAdapter.AnnouncementViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnnouncementViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -26,8 +27,15 @@ class AnnouncementsAdapter(private val isAdmin: Boolean, options: FirebaseRecycl
         return AnnouncementViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: AnnouncementViewHolder, position: Int, model: Announcement) {
-        holder.bind(model, isAdmin)
+    override fun onBindViewHolder(holder: AnnouncementViewHolder, position: Int) {
+        holder.bind(announcements[position], isAdmin)
+    }
+
+    override fun getItemCount(): Int = announcements.size
+
+    fun updateData(newAnnouncements: List<Announcement>) {
+        this.announcements = newAnnouncements
+        notifyDataSetChanged()
     }
 
     inner class AnnouncementViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -56,7 +64,7 @@ class AnnouncementsAdapter(private val isAdmin: Boolean, options: FirebaseRecycl
                 adminButtons.visibility = View.VISIBLE
                 btnEdit.setOnClickListener {
                     val intent = Intent(itemView.context, AddOrEditAnnouncementActivity::class.java)
-                    intent.putExtra("announcement_id", getRef(bindingAdapterPosition).key)
+                    intent.putExtra("announcement_id", announcement.id)
                     itemView.context.startActivity(intent)
                 }
 
@@ -65,16 +73,7 @@ class AnnouncementsAdapter(private val isAdmin: Boolean, options: FirebaseRecycl
                         .setTitle("Delete Announcement")
                         .setMessage("Are you sure you want to delete this announcement?")
                         .setPositiveButton("Delete") { _, _ ->
-                            val position = bindingAdapterPosition
-                            if (position != RecyclerView.NO_POSITION) {
-                                snapshots.getSnapshot(position).ref.removeValue()
-                                    .addOnSuccessListener {
-                                        Log.d("AnnouncementsAdapter", "Announcement deleted successfully.")
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.e("AnnouncementsAdapter", "Failed to delete announcement.", e)
-                                    }
-                            }
+                            onDeleteClick(announcement)
                         }
                         .setNegativeButton("Cancel", null)
                         .show()

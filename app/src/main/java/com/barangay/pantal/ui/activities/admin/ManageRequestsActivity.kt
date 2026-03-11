@@ -1,19 +1,18 @@
 package com.barangay.pantal.ui.activities.admin
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.barangay.pantal.R
 import com.barangay.pantal.databinding.ActivityManageRequestsBinding
 import com.barangay.pantal.model.RequestAdmin
+import com.barangay.pantal.network.SupabaseClient
 import com.barangay.pantal.ui.activities.BaseActivity
 import com.barangay.pantal.ui.adapters.RequestsAdminAdapter
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
-class ManageRequestsActivity : AppCompatActivity() {
+class ManageRequestsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityManageRequestsBinding
     private lateinit var adapter: RequestsAdminAdapter
@@ -22,6 +21,9 @@ class ManageRequestsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityManageRequestsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.root.findViewById(com.barangay.pantal.R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         adapter = RequestsAdminAdapter(
             onApproveClick = { request -> updateRequestStatus(request, "Approved") },
@@ -34,27 +36,33 @@ class ManageRequestsActivity : AppCompatActivity() {
     }
 
     private fun fetchRequests() {
-        val database = FirebaseDatabase.getInstance().getReference("requests")
-        database.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val requests = mutableListOf<RequestAdmin>()
-                for (requestSnapshot in snapshot.children) {
-                    val request = requestSnapshot.getValue(RequestAdmin::class.java)
-                    if (request != null) {
-                        requests.add(request.copy(key = requestSnapshot.key!!))
-                    }
-                }
-                adapter.submitList(requests.sortedByDescending { it.timestamp })
+        lifecycleScope.launch {
+            try {
+                val result = SupabaseClient.client.postgrest["requests"]
+                    .select()
+                    .decodeList<RequestAdmin>()
+                adapter.submitList(result.sortedByDescending { it.timestamp })
+            } catch (e: Exception) {
+                Toast.makeText(this@ManageRequestsActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle error
-            }
-        })
+        }
     }
 
     private fun updateRequestStatus(request: RequestAdmin, status: String) {
-        val database = FirebaseDatabase.getInstance().getReference("requests")
-        database.child(request.key).child("status").setValue(status)
+        lifecycleScope.launch {
+            try {
+                SupabaseClient.client.postgrest["requests"].update({
+                    set("status", status)
+                }) {
+                    filter {
+                        eq("key", request.key)
+                    }
+                }
+                Toast.makeText(this@ManageRequestsActivity, "Status updated", Toast.LENGTH_SHORT).show()
+                fetchRequests()
+            } catch (e: Exception) {
+                Toast.makeText(this@ManageRequestsActivity, "Failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

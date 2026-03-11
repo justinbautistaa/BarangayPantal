@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    alias(libs.plugins.google.gms.google.services)
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -46,22 +46,16 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation("androidx.cardview:cardview:1.0.0")
     
-    // Firebase
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.auth)
-    implementation("com.google.firebase:firebase-messaging-ktx:24.1.0")
+    // Supabase (Free Backend)
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.0")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:2.5.0")
+    implementation("io.ktor:ktor-client-android:2.3.12")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     
     // Google ML Kit (Free OCR)
     implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.1")
-    
-    // Credential Manager for Google Sign-In
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
-    implementation("com.firebaseui:firebase-ui-database:9.1.1") {
-        exclude(group = "com.facebook.android")
-    }
+    // Picasso for image loading
     implementation(libs.picasso)
 
     // Retrofit for Weather and other APIs
