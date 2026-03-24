@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+        android:theme="@style/Theme.BarangayPantal">
+
+        <activity
+            android:name="com.barangay.pantal.ui.activities.auth.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.BarangayPantal.Login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.barangay.pantal.ui.activities.admin.AdminDashboardActivity"
+            android:theme="@style/Theme.BarangayPantal.NoActionBar" />
+        <activity
+            android:name="com.barangay.pantal.ui.activities.user.UserDashboardActivity"
+            android:theme="@style/Theme.BarangayPantal.NoActionBar" />
+        <activity
+            android:name="com.barangay.pantal.ui.activities.staff.StaffDashboardActivity"
+            android:theme="@style/Theme.BarangayPantal.NoActionBar" />
+
+        <activity android:name="com.barangay.pantal.ui.activities.auth.SignupActivity" />
+
+        <!-- Admin Activities -->
+        <activity android:name="com.barangay.pantal.ui.activities.admin.ResidentsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.AddResidentActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.ViewResidentActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.HouseholdsActivity" />
+        <activity
+            android:name="com.barangay.pantal.ui.activities.admin.AddHouseholdActivity"
+            android:parentActivityName="com.barangay.pantal.ui.activities.admin.HouseholdsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.barangay.pantal.ui.activities.admin.HouseholdsActivity" />
+        </activity>
+        <activity android:name="com.barangay.pantal.ui.activities.admin.AdminAnnouncementsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.AdminRequestsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.ReportsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.PrintCertificateActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.AddOrEditAnnouncementActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.ManageServicesActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.ManageRequestsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.ManageReportsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.AddReportActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.admin.StaffManagementActivity" />
+
+        <!-- User Activities -->
+        <activity android:name="com.barangay.pantal.ui.activities.user.AnnouncementsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.user.ServicesActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.user.RequestServiceActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.user.RequestsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.user.MoreActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.user.OfficialsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.user.AiAssistantActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.user.ProfileActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.user.CreateRequestActivity" />
+
+        <!-- Staff Activities -->
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffRequestsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffResidentsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffAddResidentActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffViewResidentActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffAddAnnouncementActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffReportsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffAnnouncementsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffHouseholdsActivity" />
+        <activity android:name="com.barangay.pantal.ui.activities.staff.StaffActivityLogActivity" />
+
+    </application>
+
+</manifest>
