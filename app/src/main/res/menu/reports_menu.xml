@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_export_reports"
+        android:title="Export CSV"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_new_report"
+        android:title="New Report"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_manage_reports"
+        android:title="Manage Reports"
+        app:showAsAction="never" />
+</menu>

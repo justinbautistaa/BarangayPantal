@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.activities.staff.StaffAnnouncementsActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Announcements"
+            app:titleTextColor="@color/black" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/header_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manage barangay announcements"
+            android:textColor="@color/gray_dark"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/new_announcement_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/header_subtitle"
+            android:layout_alignBottom="@id/header_subtitle"
+            android:text="New Announcement"
+            android:backgroundTint="@color/purple_login"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@color/white" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/announcements_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/new_announcement_button"
+            android:layout_marginTop="16dp" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        app:menu="@menu/staff_bottom_navigation_menu" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

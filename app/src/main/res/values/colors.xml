@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors -->
+    <color name="primary">#4CAF50</color>
+    <color name="primary_variant">#388E3C</color>
+    <color name="secondary">#2196F3</color>
+    <color name="accent">#FFC107</color>
+
+    <!-- Base Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="blue">#2196F3</color>
+    <color name="dark_surface">#1E1E1E</color>
+    <color name="dark_background">#121212</color>
+
+    <!-- Neutral Colors -->
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_400">#BDBDBD</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_600">#757575</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_900">#212121</color>
+
+    <!-- Legacy / Specific use (Keeping for compatibility but should be migrated) -->
+    <color name="purple_login">#4CAF50</color> <!-- Still green to avoid breaking login UI for now -->
+    <color name="gray_light">#EEEEEE</color>
+    <color name="gray_dark">#424242</color>
+    <color name="gray_text">#757575</color>
+    <color name="primary_blue">#2196F3</color>
+    <color name="primary_blue_light">#BBDEFB</color>
+
+    <!-- Status Colors -->
+    <color name="success">#4CAF50</color>
+    <color name="error">#F44336</color>
+    <color name="warning">#FFEB3B</color>
+    <color name="info">#2196F3</color>
+
+    <color name="green_500">#4CAF50</color>
+    <color name="blue_500">#2196F3</color>
+    <color name="purple_500">#9C27B0</color>
+    <color name="orange_500">#FF9800</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="green_completed">#4CAF50</color>
+    <color name="red_status">#F44336</color>
+    <color name="yellow_pending">#FFEB3B</color>
+    <color name="blue_processing">#2196F3</color>
+    <color name="light_blue">#BBDEFB</color>
+    <color name="priority_high">#F44336</color>
+    <color name="priority_medium">#FFEB3B</color>
+
+    <!-- UI Specific -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="screen_background">#F5F5F5</color>
+    <color name="divider">#1F000000</color>
+</resources>

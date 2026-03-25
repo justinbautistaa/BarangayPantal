@@ -1,0 +1,124 @@
+<resources>
+    <string name="app_name">Barangay Pantal</string>
+    <string-array name="request_types">
+        <item>Default Request Type</item>
+    </string-array>
+    <string name="arrow_forward_description">Arrow forward</string>
+    <string name="view">View</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button_text">Login</string>
+    <string name="login_signup_text">Do not have an account? Sign up</string>
+    <string name="signup_fullname_hint">Full Name</string>
+    <string name="signup_confirm_password_hint">Confirm Password</string>
+    <string name="signup_button_text">Sign Up</string>
+    <string name="signup_login_text">Already have an account? Login</string>
+    <string name="default_web_client_id">961952650917-j7ttamjmqi751m77pmummugiruk4i2o1.apps.googleusercontent.com</string>
+
+    <string name="resident_details">%1$s | %2$s</string>
+    <plurals name="resident_years">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
+    <plurals name="resident_count">
+        <item quantity="one">%d resident</item>
+        <item quantity="other">%d residents</item>
+    </plurals>
+    <string name="voter">Voter</string>
+    <string name="senior">Senior</string>
+    <string name="pwd">PWD</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_requests">Requests</string>
+    <string name="title_residents">Residents</string>
+    <string name="title_households">Households</string>
+    <string name="title_announcements">Announcements</string>
+    <string name="title_activity_log">Activity Log</string>
+    <string name="title_staff_management">Staff Management</string>
+    <string name="dummy_string">dummy</string>
+    <string name="staff_residents_header">Resident Directory</string>
+    <string name="staff_residents_subtitle">View, update, and manage barangay resident records from one place.</string>
+    <string name="staff_requests_title">Process Requests</string>
+    <string name="staff_requests_subtitle">Review resident requests, open certificates, and update request status quickly.</string>
+    <string name="staff_dashboard_greeting">Ready for today\'s barangay work?</string>
+    <string name="staff_dashboard_summary">Stay on top of resident support, service requests, and day-to-day records.</string>
+    <string name="staff_dashboard_requests_stat">Requests Queue</string>
+    <string name="staff_dashboard_residents_stat">Resident Records</string>
+    <string name="staff_dashboard_shortcut_title">Quick Actions</string>
+    <string name="staff_dashboard_shortcut_subtitle">Jump into the tasks staff members use most.</string>
+    <string name="search_residents_hint">Search resident name</string>
+    <string name="refresh">Refresh</string>
+    <string name="add_resident">Add Resident</string>
+    <string name="no_residents_found">No residents found yet.</string>
+    <string name="no_requests_found">No requests found for this filter.</string>
+    <string name="filter_all">All</string>
+    <string name="filter_pending">Pending</string>
+    <string name="filter_approved">Approved</string>
+    <string name="filter_rejected">Rejected</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_empty">No notifications yet.</string>
+    <string name="notifications_announcement_title">New announcement</string>
+    <string name="notifications_announcement_message">Check the latest barangay update.</string>
+    <string name="notifications_request_title_staff">%1$s request</string>
+    <string name="notifications_request_message_staff">%1$s currently has a %2$s request.</string>
+    <string name="notifications_request_title_user">%1$s update</string>
+    <string name="notifications_request_message_user">Your request status is now %1$s.</string>
+
+    <string name="weather_city_default">Dagupan,PH</string>
+    <string name="weather_format">%1$d degrees C | %2$s</string>
+    <string name="weather_unavailable">Weather unavailable</string>
+    <string name="weather_error">Error loading weather</string>
+
+    <string name="error_fetching_counts">Error fetching dashboard data</string>
+    <string name="logout">Logout</string>
+    <string name="logout_failed">Logout failed</string>
+    <string name="resident_deleted">Resident deleted</string>
+    <string name="delete_failed">Delete failed: %s</string>
+
+    <string name="error_email_required">Email is required</string>
+    <string name="error_invalid_email">Please enter a valid email</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_login_failed">Login Failed: %s</string>
+    <string name="error_user_not_found">User profile not found in database.</string>
+    <string name="error_database">Database Error: %s</string>
+    <string name="error_fullname_required">Full name is required</string>
+    <string name="error_passwords_dont_match">Passwords do not match</string>
+    <string name="error_signup_failed">Signup Failed: %s</string>
+    <string name="signup_success">Signup successful! Please check your Gmail to verify your account.</string>
+    <string name="error_gmail_only">Please enter a valid Gmail address</string>
+    <string name="error_password_length">Password must be at least 6 characters</string>
+    <string name="error_connection_failed">Connection failed. Please check your internet.</string>
+
+    <string name="dialog_delete_resident_title">Delete Resident</string>
+    <string name="dialog_delete_resident_message">Are you sure you want to delete %s?</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_general">Error: %s</string>
+
+    <string name="title_add_resident">Add Resident</string>
+    <string name="title_edit_resident">Edit Resident</string>
+    <string name="button_save_resident">Save Resident</string>
+    <string name="button_update_resident">Update Resident</string>
+    <string name="id_scanned_success">ID Scanned Successfully!</string>
+    <string name="error_id_scan_failed">Failed to scan ID: %s</string>
+    <string name="error_load_data">Error loading data: %s</string>
+    <string name="error_fill_all_fields">Please fill all fields</string>
+    <string name="error_image_upload_failed">Image upload failed: %s</string>
+    <string name="resident_added_success">Resident added successfully</string>
+    <string name="resident_updated_success">Resident updated successfully</string>
+    <string name="error_save_failed">Save failed: %s</string>
+
+    <string name="error_fetching_announcements">Error fetching announcements: %s</string>
+    <string name="announcement_deleted">Announcement deleted</string>
+    <string name="error_delete_announcement">Delete failed: %s</string>
+
+    <string name="error_fetching_households">Error fetching households: %s</string>
+    <string name="household_deleted">Household deleted</string>
+    <string name="error_delete_household">Delete failed: %s</string>
+
+    <string name="error_fetching_reports">Error fetching reports: %s</string>
+    <string name="title_reports">Reports</string>
+
+    <string name="template_indigency_body">This is to certify that %1$s, of legal age, a Filipino citizen, whose specimen signature appears below, is a PERMANENT RESIDENT of Barangay Pantal, Dagupan City, Pangasinan.\n\nHe/She belongs to a low-income family and is considered INDIGENT in this community.\n\nThis CERTIFICATION is being issued upon the request of the above-named person for whatever legal purpose it may serve.</string>
+    <string name="template_clearance_body">This is to certify that %1$s, of legal age, a Filipino citizen, whose specimen signature appears below, is a PERMANENT RESIDENT of Barangay Pantal, Dagupan City, Pangasinan.\n\nHe/She has NO DEROGATORY RECORD filed in this office as of this date.\n\nThis CLEARANCE is being issued upon the request of the above-named person for whatever legal purpose it may serve.</string>
+</resources>
